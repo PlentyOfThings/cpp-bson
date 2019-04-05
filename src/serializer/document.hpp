@@ -12,6 +12,12 @@ namespace serializer {
 
 class Document {
 public:
+  static Result build(uint8_t buf[], size_t len, void (*builder)(Document)) {
+    Document doc(buf, len);
+    builder(doc);
+    return doc.end();
+  }
+
   Document(uint8_t buf[], size_t len) : buffer_(buf), buffer_length_(len) {
     start();
   }
