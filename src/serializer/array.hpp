@@ -18,15 +18,15 @@ public:
     end();
   }
 
-  kResult append(double value);
-  kResult append(const char str[]);
-  kResult append(uint8_t buf[]);
-  kResult append(bool value);
-  kResult append();
-  kResult append(uint32_t value);
-  kResult append(uint64_t value);
+  Result append(double value);
+  Result append(const char str[]);
+  Result append(uint8_t buf[]);
+  Result append(bool value);
+  Result append();
+  Result append(uint32_t value);
+  Result append(uint64_t value);
 
-  kResult end();
+  Result end();
 
 private:
   Document doc_;

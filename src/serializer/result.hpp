@@ -5,7 +5,7 @@ namespace pot {
 namespace bson {
 namespace serializer {
 
-enum struct kResult {
+enum struct Result {
   /**
    * The operation completed without errors.
    */

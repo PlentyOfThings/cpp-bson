@@ -6,7 +6,7 @@
 namespace pot {
 namespace bson {
 
-enum struct kTypeSize : uint8_t {
+enum struct TypeSize : uint8_t {
   Byte = 1,
   Int32 = 4,
   Int64 = 8,
@@ -15,7 +15,7 @@ enum struct kTypeSize : uint8_t {
   Decimal128 = 16,
 };
 
-enum struct kElement : uint8_t {
+enum struct Element : uint8_t {
   Double = 0x01,
   String = 0x02, // can contain null chars
   Document = 0x03,
@@ -28,11 +28,11 @@ enum struct kElement : uint8_t {
   Decimal128 = 0x13,
 };
 
-enum struct kBinaryElementSubtype : uint8_t {
+enum struct BinaryElementSubtype : uint8_t {
   Generic = 0x00,
 };
 
-enum struct kBooleanElementValue : uint8_t {
+enum struct BooleanElementValue : uint8_t {
   False = 0x00,
   True = 0x01,
 };

@@ -19,15 +19,15 @@ public:
     end();
   }
 
-  kResult append(const char key[], double value);
-  kResult append(const char key[], const char str[]);
-  kResult append(const char key[], uint8_t buf[]);
-  kResult append(const char key[], bool value);
-  kResult append(const char key[]);
-  kResult append(const char key[], uint32_t value);
-  kResult append(const char key[], uint64_t value);
+  Result append(const char key[], double value);
+  Result append(const char key[], const char str[]);
+  Result append(const char key[], uint8_t buf[]);
+  Result append(const char key[], bool value);
+  Result append(const char key[]);
+  Result append(const char key[], uint32_t value);
+  Result append(const char key[], uint64_t value);
 
-  kResult end();
+  Result end();
 
 private:
   uint8_t *buffer_;
