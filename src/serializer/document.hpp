@@ -28,6 +28,7 @@ public:
   Document &append(const char key[], void (*builder)(Document)) {
     Document child(*this);
     builder(child);
+    child.end();
     syncWith(child);
 
     return *this;
@@ -36,6 +37,7 @@ public:
   Document &append(const char key[], void (*builder)(Array)) {
     Array child(*this);
     builder(child);
+    child.end();
     syncWith(child);
 
     return *this;
