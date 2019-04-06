@@ -13,9 +13,9 @@ enum struct Status {
    */
   Ok,
   /**
-   * The document couldn't be completed because it would have overflowed the buffer.
-   * If this is returned, then the buffer is assumed to be in an invalid state,
-   * and the document will have to be reconstructed from the beginning.
+   * The document couldn't be completed because it would have overflowed the
+   * buffer. If this is returned, then the buffer is assumed to be in an invalid
+   * state, and the document will have to be reconstructed from the beginning.
    */
   BufferOverflow,
 };

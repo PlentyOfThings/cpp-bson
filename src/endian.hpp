@@ -19,7 +19,8 @@ bool is_big_endian() {
   return convert.buf[0] == 1;
 }
 
-template <typename T, TypeSize Size> void primitive_to_buffer(uint8_t buf[], T value) {
+template <typename T, TypeSize Size>
+void primitive_to_buffer(uint8_t buf[], T value) {
   ConvUnion<T, Size> convert = { value };
   uint8_t len = static_cast<uint8_t>(Size);
 

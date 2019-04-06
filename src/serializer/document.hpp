@@ -24,8 +24,8 @@ public:
   }
 
   Document(Document &parent) :
-      buffer_(parent.buffer_), buffer_length_(parent.buffer_length_), current_(parent.current_),
-      start_(parent.start_) {
+      buffer_(parent.buffer_), buffer_length_(parent.buffer_length_),
+      current_(parent.current_), start_(parent.start_) {
     start();
   }
 
@@ -142,7 +142,8 @@ private:
     writeInt32(0);
   }
 
-  void writeElement(Element type, const char key[], uint8_t buf[], TypeSize size) {
+  void writeElement(Element type, const char key[], uint8_t buf[],
+                    TypeSize size) {
     writeElement(type, key, buf, static_cast<size_t>(size));
   }
 
