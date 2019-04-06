@@ -32,7 +32,10 @@ test: $(GTEST_LIB)
 
 $(GTEST_LIB):
 	mkdir -p $(GTEST_BUILD)
-	cmake $(GTEST)/CMakeLists.txt -B $(GTEST_BUILD)
+	cmake $(GTEST)/CMakeLists.txt
 	(cd $(GTEST)/build && make)
 
-.PHONY: format test
+gtest-clean:
+	rm -r $(GTEST_BUILD)
+
+.PHONY: format test check gtest-clean
