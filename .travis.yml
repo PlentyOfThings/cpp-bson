@@ -1,9 +1,6 @@
-sudo: true
+sudo: false
 language: cpp
 
-before_install:
-  - sudo apt-get install --only-upgrade clang-format
-
 script:
-  - make check
+  # - make check
   - make test
