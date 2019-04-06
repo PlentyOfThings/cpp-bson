@@ -33,6 +33,6 @@ test:
 	$(TEST_EXE)
 
 get-test-deps:
-	pip3.6 install ply
+	pip3 install ply
 
 .PHONY: default format test check
