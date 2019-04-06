@@ -31,7 +31,8 @@ test: $(GTEST_LIB)
 	$(TEST_EXE)
 
 $(GTEST_LIB):
-	cmake $(GTEST)/CMakeLists.txt -B $(GTEST)/build
+	mkdir -p $(GTEST_BUILD)
+	cmake $(GTEST)/CMakeLists.txt -B $(GTEST_BUILD)
 	(cd $(GTEST)/build && make)
 
 .PHONY: format test
