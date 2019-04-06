@@ -13,12 +13,14 @@ FMT=./scripts/fmt.sh
 EXLIBS=external_lib
 GTEST=$(EXLIBS)/gtest
 GTEST_INCL=$(GTEST)/googletest/include
-# GTEST_BUILD_OUTPUT:=/build
+GTEST_BUILD_OUTPUT?=/build
 GTEST_BUILD=$(GTEST)$(GTEST_BUILD_OUTPUT)
 GTEST_LIB_DIR=$(GTEST_BUILD)/googlemock/gtest
 GTEST_LIB=$(GTEST_LIB_DIR)libgtest.a
 
 CXX_FLAGS=-std=c++11 -stdlib=libc++ -Wall -DGTEST_USE_OWN_TR1_TUPLE=1 -I$(GTEST_INCL) -L$(GTEST_LIB_DIR) -lgtest
+
+default: test
 
 format:
 	$(FMT)
@@ -39,4 +41,4 @@ $(GTEST_LIB):
 gtest-clean:
 	rm -r $(GTEST_BUILD)
 
-.PHONY: format test check gtest-clean
+.PHONY: default format test check gtest-clean
