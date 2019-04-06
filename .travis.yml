@@ -1,6 +1,11 @@
 sudo: false
 language: cpp
 
+addons:
+  apt:
+    packages:
+      - clang
+
 script:
   # - make check
   - make test
