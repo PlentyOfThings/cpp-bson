@@ -1,4 +1,4 @@
-sudo: false
+sudo: true
 language: cpp
 
 addons:
@@ -8,7 +8,7 @@ addons:
       - python3-pip
 
 install:
-  - make get-test-deps
+  - sudo make get-test-deps
 
 script:
   # - make check
