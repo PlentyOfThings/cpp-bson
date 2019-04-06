@@ -4,7 +4,7 @@ language: cpp
 addons:
   apt:
     packages:
-      - clang-format-5.0
+      - clang-format
 
 script:
   - make check
