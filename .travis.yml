@@ -6,6 +6,9 @@ addons:
     packages:
       - clang
 
+env:
+  - GTEST_BUILD_OUTPUT=
+
 script:
   # - make check
   - make test

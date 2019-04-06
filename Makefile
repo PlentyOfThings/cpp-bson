@@ -13,7 +13,8 @@ FMT=./scripts/fmt.sh
 EXLIBS=external_lib
 GTEST=$(EXLIBS)/gtest
 GTEST_INCL=$(GTEST)/googletest/include
-GTEST_BUILD=$(GTEST)/build
+GTEST_BUILD_OUTPUT:=/build
+GTEST_BUILD=$(GTEST)$(GTEST_BUILD_OUTPUT)
 GTEST_LIB_DIR=$(GTEST_BUILD)/googlemock/gtest
 GTEST_LIB=$(GTEST_LIB_DIR)libgtest.a
 
