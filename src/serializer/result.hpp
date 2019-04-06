@@ -7,19 +7,6 @@ namespace pot {
 namespace bson {
 namespace serializer {
 
-struct Result {
-  /**
-   * The resulting status code from the attempted action.
-   */
-  Status status;
-  /**
-   * This is the total length of the document. Even if there was a buffer
-   * overflow, this will still be accurate, and can be used to reallocate
-   * a buffer of the required size if necessary.
-   */
-  size_t len;
-};
-
 enum struct Status {
   /**
    * The operation completed without errors.
@@ -31,6 +18,19 @@ enum struct Status {
    * and the document will have to be reconstructed from the beginning.
    */
   BufferOverflow,
+};
+
+struct Result {
+  /**
+   * The resulting status code from the attempted action.
+   */
+  Status status;
+  /**
+   * This is the total length of the document. Even if there was a buffer
+   * overflow, this will still be accurate, and can be used to reallocate
+   * a buffer of the required size if necessary.
+   */
+  size_t len;
 };
 
 } // namespace serializer

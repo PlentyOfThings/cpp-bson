@@ -10,12 +10,19 @@ namespace pot {
 namespace bson {
 namespace serializer {
 
+static const size_t kKeySize = 12;
+
 class Array {
 public:
-  Array(Document &parent) : doc_(parent) {}
+  static Array from(Document &current) {
+    Array arr(current);
+    return arr;
+  }
+
+  Array(Document &current) : doc_(current) {}
 
   Array &append(double value) {
-    char key[12];
+    char key[kKeySize];
     handleIndex(key);
     doc_.append(key, value);
 
@@ -23,7 +30,7 @@ public:
   }
 
   Array &append(const char str[]) {
-    char key[12];
+    char key[kKeySize];
     handleIndex(key);
     doc_.append(key, str);
 
@@ -31,7 +38,7 @@ public:
   }
 
   Array &append(void (*builder)(Document)) {
-    char key[12];
+    char key[kKeySize];
     handleIndex(key);
     doc_.append(key, builder);
 
@@ -39,7 +46,7 @@ public:
   }
 
   Array &append(void (*builder)(Array)) {
-    char key[12];
+    char key[kKeySize];
     handleIndex(key);
     doc_.append(key, builder);
 
@@ -47,7 +54,7 @@ public:
   }
 
   Array &append(uint8_t buf[], size_t len) {
-    char key[12];
+    char key[kKeySize];
     handleIndex(key);
     doc_.append(key, buf, len);
 
@@ -55,7 +62,7 @@ public:
   }
 
   Array &append(bool value) {
-    char key[12];
+    char key[kKeySize];
     handleIndex(key);
     doc_.append(key, value);
 
@@ -63,43 +70,27 @@ public:
   }
 
   Array &append() {
-    char key[12];
+    char key[kKeySize];
     handleIndex(key);
     doc_.append(key);
 
     return *this;
   }
 
-  Array &append(uint32_t value) {
-    char key[12];
+  Array &append(int32_t value) {
+    char key[kKeySize];
     handleIndex(key);
     doc_.append(key, value);
 
     return *this;
   }
 
-  Array &append(uint64_t value) {
-    char key[12];
+  Array &append(int64_t value) {
+    char key[kKeySize];
     handleIndex(key);
     doc_.append(key, value);
 
     return *this;
-  }
-
-  Result end() {
-    return doc_.end();
-  }
-
-  void syncWith(Document &child) {
-    doc_.syncWith(child);
-  }
-
-  void syncWith(Array &child) {
-    doc_.syncWith(child);
-  }
-
-  void syncTo(Document &parent) {
-    parent.syncWith(doc_);
   }
 
 private:
@@ -107,7 +98,7 @@ private:
   size_t index_ = 0;
 
   int handleIndex(char key[]) {
-    int ret = snprintf(key, sizeof(key), "%Lu", index_);
+    int ret = snprintf(key, kKeySize, "%lu", index_);
     index_++;
     return ret;
   }
