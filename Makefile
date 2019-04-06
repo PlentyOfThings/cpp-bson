@@ -35,7 +35,7 @@ test: $(GTEST_LIB)
 
 $(GTEST_LIB):
 	mkdir -p $(GTEST_BUILD)
-	cmake $(GTEST)/CMakeLists.txt
+	cmake $(GTEST)/CMakeLists.txt -B $(GTEST_BUILD)
 	(cd $(GTEST_BUILD) && make)
 
 gtest-clean:
