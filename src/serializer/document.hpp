@@ -4,8 +4,8 @@
 #include "../consts.hpp"
 #include "../endian.hpp"
 #include "./result.hpp"
-#include "stdlib.h"
-#include "string.h"
+#include <stdlib.h>
+#include <string.h>
 
 namespace pot {
 namespace bson {

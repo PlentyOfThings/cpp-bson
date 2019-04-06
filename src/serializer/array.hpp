@@ -3,8 +3,8 @@
 
 #include "./document.hpp"
 #include "./result.hpp"
-#include "stdio.h"
-#include "stdlib.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 namespace pot {
 namespace bson {
