@@ -16,7 +16,7 @@ CXXTEST_DIR=$(EXLIBS)/cxxtest
 CXXTEST_BIN=$(CXXTEST_DIR)/bin
 CXXTEST=python3 $(CXXTEST_BIN)/cxxtestgen --error-printer -o $(TEST_RUNNER) --fog-parser
 
-CXX_FLAGS=-std=c++11 -stdlib=libc++ -Wall -I$(CXXTEST_DIR)
+CXX_FLAGS=-std=c++11 -Wall -I$(CXXTEST_DIR)
 
 default: test
 
