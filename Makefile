@@ -1,5 +1,5 @@
-export CC=/usr/bin/clang
-export CXX=/usr/bin/clang++
+export CC=clang
+export CXX=clang++
 
 SRC=src
 
