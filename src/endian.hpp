@@ -13,7 +13,7 @@ template <typename T, TypeSize Size> union ConvUnion {
   uint8_t buf[static_cast<size_t>(Size)];
 };
 
-bool is_big_endian() {
+inline bool is_big_endian() {
   ConvUnion<uint32_t, TypeSize::Int32> convert = { 0x01020304 };
 
   return convert.buf[0] == 1;

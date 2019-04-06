@@ -10,7 +10,7 @@ namespace pot {
 namespace bson {
 namespace serializer {
 
-static const size_t kKeySize = 12;
+static constexpr size_t kKeySize = 12;
 
 class Array {
 public:
@@ -37,7 +37,7 @@ public:
     return *this;
   }
 
-  Array &append(void (*builder)(Document)) {
+  Array &append(void (*builder)(Document &)) {
     char key[kKeySize];
     handleIndex(key);
     doc_.append(key, builder);
@@ -45,7 +45,7 @@ public:
     return *this;
   }
 
-  Array &append(void (*builder)(Array)) {
+  Array &append(void (*builder)(Array &)) {
     char key[kKeySize];
     handleIndex(key);
     doc_.append(key, builder);

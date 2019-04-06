@@ -6,8 +6,8 @@ addons:
     packages:
       - clang
 
-env:
-  - GTEST_BUILD_OUTPUT=
+install:
+  - make get-test-deps
 
 script:
   # - make check

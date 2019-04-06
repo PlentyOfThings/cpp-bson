@@ -13,21 +13,18 @@ namespace serializer {
 
 class Document {
 public:
-  static Result build(uint8_t buf[], size_t len, void (*builder)(Document)) {
+  static Result build(uint8_t buf[], size_t len, void (*builder)(Document &)) {
     Document doc(buf, len);
+    doc.start();
     builder(doc);
     return doc.end();
   }
 
-  Document(uint8_t buf[], size_t len) : buffer_(buf), buffer_length_(len) {
-    start();
-  }
+  Document(uint8_t buf[], size_t len) : buffer_(buf), buffer_length_(len) {}
 
   Document(Document &parent) :
       buffer_(parent.buffer_), buffer_length_(parent.buffer_length_),
-      current_(parent.current_), start_(parent.start_) {
-    start();
-  }
+      current_(parent.current_), start_(parent.start_) {}
 
   Document &append(const char key[], double value) {
     uint8_t buf[static_cast<size_t>(TypeSize::Double)];
@@ -42,8 +39,8 @@ public:
     writeStr(key);
 
     int32_t slen = strlen(str);
-    writeInt32(slen);
-    writeByte(0);
+    writeInt32(slen + 1);
+    writeStr(str);
 
     return *this;
   }
