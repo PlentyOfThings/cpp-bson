@@ -1,0 +1,3 @@
+[submodule "external_lib/cxxtest"]
+	path = external_lib/cxxtest
+	url = https://github.com/CxxTest/cxxtest.git
