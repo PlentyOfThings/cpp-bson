@@ -1,17 +1,16 @@
 sudo: true
 language: cpp
 
+compiler:
+  - clang
+
 addons:
   apt:
     packages:
-      - clang-3.6
       - python3-pip
 
 install:
   - sudo make get-test-deps
-
-before_script:
-  - clang++ --version
 
 script:
   # - make check
