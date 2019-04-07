@@ -1,6 +1,7 @@
 #ifndef POT_BSON_SERIALIZER_ARRAY_H_
 #define POT_BSON_SERIALIZER_ARRAY_H_
 
+#include "../consts.hpp"
 #include "./document.hpp"
 #include "./result.hpp"
 #include <stdio.h>
@@ -10,86 +11,89 @@ namespace pot {
 namespace bson {
 namespace serializer {
 
-static constexpr size_t kKeySize = 12;
-
-class Array {
+class Array : private Document {
 public:
-  Array(Document *current) : doc_(current) {}
+  Array(const char key[], Document *parent) :
+      Document(key, parent, Element::Array) {}
+  Array(Array &parent) : Document(parent, Element::Array) {}
 
   Array &appendDouble(double value) {
-    char key[kKeySize];
+    char key[kArrayKeySize];
     handleIndex(key);
-    doc_->appendDouble(key, value);
+    Document::appendDouble(key, value);
 
     return *this;
   }
 
   Array &appendStr(const char str[]) {
-    char key[kKeySize];
+    char key[kArrayKeySize];
     handleIndex(key);
-    doc_->appendStr(key, str);
-
-    return *this;
-  }
-
-  Array &appendDoc(void (*builder)(Document &)) {
-    char key[kKeySize];
-    handleIndex(key);
-    doc_->appendDoc(key, builder);
+    Document::appendStr(key, str);
 
     return *this;
   }
 
   Array &appendBinary(uint8_t buf[], size_t len) {
-    char key[kKeySize];
+    char key[kArrayKeySize];
     handleIndex(key);
-    doc_->appendBinary(key, buf, len);
+    Document::appendBinary(key, buf, len);
 
     return *this;
   }
 
   Array &appendBool(bool value) {
-    char key[kKeySize];
+    char key[kArrayKeySize];
     handleIndex(key);
-    doc_->appendBool(key, value);
+    Document::appendBool(key, value);
 
     return *this;
   }
 
   Array &appendNull() {
-    char key[kKeySize];
+    char key[kArrayKeySize];
     handleIndex(key);
-    doc_->appendNull(key);
+    Document::appendNull(key);
 
     return *this;
   }
 
   Array &appendInt32(int32_t value) {
-    char key[kKeySize];
+    char key[kArrayKeySize];
     handleIndex(key);
-    doc_->appendInt32(key, value);
+    Document::appendInt32(key, value);
 
     return *this;
   }
 
   Array &appendInt64(int64_t value) {
-    char key[kKeySize];
+    char key[kArrayKeySize];
     handleIndex(key);
-    doc_->appendInt64(key, value);
+    Document::appendInt64(key, value);
 
     return *this;
   }
 
-private:
-  Document *doc_;
-  size_t index_ = 0;
+  Document *getWorkingDoc() {
+    return this;
+  }
 
   int handleIndex(char key[]) {
-    int ret = snprintf(key, kKeySize, "%lu", index_);
+    int ret = snprintf(key, kArrayKeySize, "%lu", index_);
     index_++;
     return ret;
   }
+
+private:
+  size_t index_ = 0;
 };
+
+Document *array_get_working_doc_(Array &arr) {
+  return arr.getWorkingDoc();
+}
+
+int array_handle_index_(Array &arr, char key[]) {
+  return arr.handleIndex(key);
+}
 
 } // namespace serializer
 } // namespace bson

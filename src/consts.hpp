@@ -6,6 +6,8 @@
 namespace pot {
 namespace bson {
 
+static constexpr size_t kArrayKeySize = 12;
+
 enum struct TypeSize : uint8_t {
   Byte = 1,
   Int32 = 4,

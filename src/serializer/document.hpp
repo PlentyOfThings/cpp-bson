@@ -11,26 +11,29 @@ namespace pot {
 namespace bson {
 namespace serializer {
 
+class Document;
+class Array;
+
+Document *array_get_working_doc_(Array &arr);
+int array_handle_index_(Array &arr, char key[]);
+
 class Document {
 public:
-  static Result build(uint8_t buf[], size_t len, void (*builder)(Document &)) {
-    Document doc(buf, len);
-    builder(doc);
-    return doc.end();
-  }
-
   Document(uint8_t buf[], size_t len) : buffer_(buf), buffer_length_(len) {
     start();
   }
 
-  Document(Document *parent) :
-      buffer_(parent->buffer_), buffer_length_(parent->buffer_length_),
-      current_(parent->current_), start_(parent->current_), parent_(parent) {
-    start();
-  }
+  Document(const char key[], Document *parent) :
+      Document(key, parent, Element::Document) {}
+
+  Document(Array &parent) : Document(parent, Element::Document) {}
 
   Document(const Document &) = delete;
   void operator=(const Document &) = delete;
+
+  ~Document() {
+    end();
+  }
 
   Document &appendDouble(const char key[], double value) {
     uint8_t buf[static_cast<size_t>(TypeSize::Double)];
@@ -47,18 +50,6 @@ public:
     int32_t slen = strlen(str);
     writeInt32(slen + 1);
     writeStr(str);
-
-    return *this;
-  }
-
-  Document &appendDoc(const char key[], void (*builder)(Document &)) {
-    writeDoc(Element::Document, key, builder);
-
-    return *this;
-  }
-
-  Document &appendArray(const char key[], void (*builder)(Document &)) {
-    writeDoc(Element::Array, key, builder);
 
     return *this;
   }
@@ -111,22 +102,29 @@ public:
   }
 
   Result end() {
-    writeByte(0);
+    int32_t len;
+    if (!ended_) {
+      writeByte(0);
 
-    // Store length of the document.
-    int32_t len = current_ - start_;
+      // Store length of the document.
+      len = getLength();
 
-    // Store the current buffer index.
-    size_t tmp_current = current_;
+      // Store the current buffer index.
+      size_t tmp_current = current_;
 
-    // Switch over to start.
-    setCurrent(start_);
+      // Switch over to start.
+      setCurrent(start_);
 
-    // Write the length of the document.
-    writeInt32(len);
+      // Write the length of the document.
+      writeInt32(len);
 
-    // Restore current buffer index.
-    setCurrent(tmp_current);
+      // Restore current buffer index.
+      setCurrent(tmp_current);
+
+      ended_ = true;
+    } else {
+      len = getLength();
+    }
 
     Result res;
     res.len = len;
@@ -139,24 +137,45 @@ public:
     return res;
   }
 
-private:
+protected:
   uint8_t *buffer_;
   size_t buffer_length_;
   size_t current_ = 0;
   size_t start_ = 0;
   Document *parent_ = nullptr;
+  bool ended_ = false;
+
+  Document(const char key[], Document *parent, Element type) {
+    fromParent(parent, type);
+    writeStr(key);
+    start_ = parent->current_;
+    start();
+  }
+
+  Document(Array &parent, Element type) {
+    Document *docParent = array_get_working_doc_(parent);
+    fromParent(docParent, type);
+    char key[kArrayKeySize];
+    array_handle_index_(parent, key);
+    writeStr(key);
+    start_ = docParent->current_;
+    start();
+  }
+
+  void fromParent(Document *parent, Element type) {
+    buffer_ = parent->buffer_;
+    buffer_length_ = parent->buffer_length_;
+    current_ = parent->current_;
+    parent_ = parent;
+    writeByte(type);
+  }
 
   void start() {
     writeInt32(0);
   }
 
-  void writeDoc(Element type, const char key[], void (*builder)(Document &)) {
-    writeByte(type);
-    writeStr(key);
-
-    Document child(this);
-    builder(child);
-    child.end();
+  int32_t getLength() {
+    return current_ - start_;
   }
 
   void writeElement(Element type, const char key[], uint8_t buf[],
@@ -217,13 +236,13 @@ private:
     if (current_ < buffer_length_) {
       buffer_[current_] = byte;
     }
-    intCurrent();
+    incCurrent();
   }
 
-  void intCurrent() {
+  void incCurrent() {
     current_++;
     if (parent_) {
-      parent_->intCurrent();
+      parent_->incCurrent();
     }
   }
 

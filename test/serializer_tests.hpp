@@ -8,15 +8,20 @@ static constexpr size_t kBufSize = 256;
 
 class SerializerTests : public CxxTest::TestSuite {
   uint8_t buf[kBufSize];
+  bsons::Document *rootDoc;
 
 public:
   void setUp() {
     clear_buf(buf, kBufSize);
+    rootDoc = new bsons::Document(buf, kBufSize);
+  }
+
+  void tearDown() {
+    delete rootDoc;
   }
 
   void testEmptyDocument() {
-    bsons::Result res =
-        bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {});
+    bsons::Result res = rootDoc->end();
 
     uint8_t expected[kBufSize] = { 0x05, 0x00, 0x00, 0x00, 0x00 };
     clear_buf(expected, 5, kBufSize);
@@ -27,10 +32,7 @@ public:
   }
 
   void testSimpleDocumentDouble() {
-    bsons::Result res =
-        bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {
-          doc.appendDouble("a", 0.2);
-        });
+    bsons::Result res = rootDoc->appendDouble("a", 0.2).end();
 
     uint8_t expected[kBufSize] = {
       0x10, 0x00, 0x00, 0x00, 0x01, 0x61, 0x00, 0x9A,
@@ -44,10 +46,7 @@ public:
   }
 
   void testSimpleDocumentString() {
-    bsons::Result res =
-        bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {
-          doc.appendStr("hello", "world");
-        });
+    bsons::Result res = rootDoc->appendStr("hello", "world").end();
 
     uint8_t expected[kBufSize] = {
       0x16, 0x00, 0x00, 0x00, 0x02, 0x68, 0x65, 0x6C, 0x6C, 0x6F, 0x00,
@@ -61,12 +60,12 @@ public:
   }
 
   void testSimpleNestedDocument() {
-    bsons::Result res =
-        bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {
-          doc.appendDoc("a", [](bsons::Document &internalDoc) {
-            internalDoc.appendStr("b", "c");
-          });
-        });
+    {
+      bsons::Document nested("a", rootDoc);
+      nested.appendStr("b", "c");
+    }
+
+    bsons::Result res = rootDoc->end();
 
     uint8_t expected[kBufSize] = {
       0x16, 0x00, 0x00, 0x00, 0x03, 0x61, 0x00, 0x0E, 0x00, 0x00, 0x00,
@@ -80,11 +79,8 @@ public:
   }
 
   void testSimpleDocumentBinary() {
-    bsons::Result res =
-        bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {
-          uint8_t bin[] = { 1, 2, 3, 2, 1 };
-          doc.appendBinary("a", bin, 5);
-        });
+    uint8_t bin[] = { 1, 2, 3, 2, 1 };
+    bsons::Result res = rootDoc->appendBinary("a", bin, 5).end();
 
     uint8_t expected[kBufSize] = {
       0x12, 0x00, 0x00, 0x00, 0x05, 0x61, 0x00, 0x05, 0x00,
@@ -99,10 +95,7 @@ public:
 
   void testSimpleDocumentBool() {
     bsons::Result res =
-        bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {
-          doc.appendBool("true", true);
-          doc.appendBool("false", false);
-        });
+        rootDoc->appendBool("true", true).appendBool("false", false).end();
 
     uint8_t expected[kBufSize] = {
       0x14, 0x00, 0x00, 0x00, 0x08, 0x74, 0x72, 0x75, 0x65, 0x00,
@@ -116,8 +109,7 @@ public:
   }
 
   void testSimpleDocumentNull() {
-    bsons::Result res = bsons::Document::build(
-        buf, kBufSize, [](bsons::Document &doc) { doc.appendNull("nil"); });
+    bsons::Result res = rootDoc->appendNull("nil").end();
 
     uint8_t expected[kBufSize] = {
       0x0A, 0x00, 0x00, 0x00, 0x0A, 0x6E, 0x69, 0x6C, 0x00, 0x00,
@@ -130,10 +122,7 @@ public:
   }
 
   void testSimpleDocumentInt32() {
-    bsons::Result res =
-        bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {
-          doc.appendInt32("val", 9812);
-        });
+    bsons::Result res = rootDoc->appendInt32("val", 9812).end();
 
     uint8_t expected[kBufSize] = {
       0x0E, 0x00, 0x00, 0x00, 0x10, 0x76, 0x61,
@@ -147,10 +136,7 @@ public:
   }
 
   void testSimpleDocumentInt64() {
-    bsons::Result res =
-        bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {
-          doc.appendInt64("val", 98761234);
-        });
+    bsons::Result res = rootDoc->appendInt64("val", 98761234).end();
 
     uint8_t expected[kBufSize] = {
       0x12, 0x00, 0x00, 0x00, 0x12, 0x76, 0x61, 0x6C, 0x00,
@@ -164,24 +150,26 @@ public:
   }
 
   void testArrayAppend() {
-    bsons::Result res =
-        bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {
-          doc.appendArray("arr", [](bsons::Document &darr) {
-            uint8_t bin[] = { 1, 2, 3 };
+    {
+      bsons::Array arr("arr", rootDoc);
 
-            bsons::Array arr(&darr);
-            arr.appendDouble(0.2)
-                .appendStr("element")
-                .appendDoc(
-                    [](bsons::Document &nested) { nested.appendStr("a", "b"); })
-                .appendBinary(bin, 3)
-                .appendBool(true)
-                .appendBool(false)
-                .appendNull()
-                .appendInt32(21)
-                .appendInt64(91);
-          });
-        });
+      arr.appendDouble(0.2).appendStr("element");
+
+      {
+        bsons::Document nested(arr);
+        nested.appendStr("a", "b");
+      }
+
+      uint8_t bin[] = { 1, 2, 3 };
+      arr.appendBinary(bin, 3)
+          .appendBool(true)
+          .appendBool(false)
+          .appendNull()
+          .appendInt32(21)
+          .appendInt64(91);
+    }
+
+    bsons::Result res = rootDoc->end();
 
     uint8_t expected[kBufSize] = {
       0x62, 0x00, 0x00, 0x00, 0x04, 0x61, 0x72, 0x72, 0x00, 0x58, 0x00,
