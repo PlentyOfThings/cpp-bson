@@ -52,6 +52,12 @@ public:
     return *this;
   }
 
+  Document &appendDouble(int32_t ikey, double value) {
+    char skey[kIntKeySize];
+    convert_int_key_to_str(ikey, skey);
+    return appendDouble(skey, value);
+  }
+
   Document &appendStr(const char key[], const char str[]) {
     writeByte(Element::String);
     writeStr(key);
@@ -63,6 +69,12 @@ public:
     return *this;
   }
 
+  Document &appendStr(int32_t ikey, const char str[]) {
+    char skey[kIntKeySize];
+    convert_int_key_to_str(ikey, skey);
+    return appendStr(skey, str);
+  }
+
   Document &appendDocument(const char key[],
                            std::function<void(Document &)> builder) {
     Document child(key, this);
@@ -71,8 +83,16 @@ public:
     return *this;
   }
 
+  Document &appendDocument(int32_t ikey,
+                           std::function<void(Document &)> builder) {
+    char skey[kIntKeySize];
+    convert_int_key_to_str(ikey, skey);
+    return appendDocument(skey, builder);
+  }
+
   // Implemented in array.hpp
   Document &appendArray(const char key[], std::function<void(Array &)> builder);
+  Document &appendArray(int32_t ikey, std::function<void(Array &)> builder);
 
   Document &appendBinary(const char key[], const uint8_t buf[], int32_t len) {
     writeByte(Element::Binary);
@@ -83,6 +103,12 @@ public:
     writeBuf(buf, len);
 
     return *this;
+  }
+
+  Document &appendBinary(int32_t ikey, const uint8_t buf[], int32_t len) {
+    char skey[kIntKeySize];
+    convert_int_key_to_str(ikey, skey);
+    return appendBinary(skey, buf, len);
   }
 
   Document &appendBool(const char key[], bool value) {
@@ -98,11 +124,23 @@ public:
     return *this;
   }
 
+  Document &appendBool(int32_t ikey, bool value) {
+    char skey[kIntKeySize];
+    convert_int_key_to_str(ikey, skey);
+    return appendBool(skey, value);
+  }
+
   Document &appendNull(const char key[]) {
     writeByte(Element::Null);
     writeStr(key);
 
     return *this;
+  }
+
+  Document &appendNull(int32_t ikey) {
+    char skey[kIntKeySize];
+    convert_int_key_to_str(ikey, skey);
+    return appendNull(skey);
   }
 
   Document &appendInt32(const char key[], int32_t value) {
@@ -113,12 +151,24 @@ public:
     return *this;
   }
 
+  Document &appendInt32(int32_t ikey, int32_t value) {
+    char skey[kIntKeySize];
+    convert_int_key_to_str(ikey, skey);
+    return appendInt32(skey, value);
+  }
+
   Document &appendInt64(const char key[], int64_t value) {
     uint8_t buf[static_cast<size_t>(TypeSize::Int64)];
     endian::primitive_to_buffer<int64_t, TypeSize::Int64>(buf, value);
     writeElement(Element::Int64, key, buf, TypeSize::Int64);
 
     return *this;
+  }
+
+  Document &appendInt64(int32_t ikey, int64_t value) {
+    char skey[kIntKeySize];
+    convert_int_key_to_str(ikey, skey);
+    return appendInt64(skey, value);
   }
 
   Result end() {
@@ -175,7 +225,7 @@ protected:
   Document(Array &parent, Element type) {
     Document *docParent = array_get_working_doc_(parent);
     fromParent(docParent, type);
-    char key[kArrayKeySize];
+    char key[kIntKeySize];
     array_handle_index_(parent, key);
     writeStr(key);
     start_ = docParent->current_;

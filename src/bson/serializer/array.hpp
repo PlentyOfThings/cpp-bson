@@ -19,73 +19,55 @@ public:
   Array(Array &parent) : Document(parent, Element::Array) {}
 
   Array &appendDouble(double value) {
-    char key[kArrayKeySize];
-    handleIndex(key);
-    Document::appendDouble(key, value);
+    Document::appendDouble(index_++, value);
 
     return *this;
   }
 
   Array &appendStr(const char str[]) {
-    char key[kArrayKeySize];
-    handleIndex(key);
-    Document::appendStr(key, str);
+    Document::appendStr(index_++, str);
 
     return *this;
   }
 
   Array &appendDocument(std::function<void(Document &)> builder) {
-    char key[kArrayKeySize];
-    handleIndex(key);
-    Document::appendDocument(key, builder);
+    Document::appendDocument(index_++, builder);
 
     return *this;
   }
 
   Array &appendArray(std::function<void(Array &)> builder) {
-    char key[kArrayKeySize];
-    handleIndex(key);
-    Document::appendArray(key, builder);
+    Document::appendArray(index_++, builder);
 
     return *this;
   }
 
   Array &appendBinary(const uint8_t buf[], size_t len) {
-    char key[kArrayKeySize];
-    handleIndex(key);
-    Document::appendBinary(key, buf, len);
+    Document::appendBinary(index_++, buf, len);
 
     return *this;
   }
 
   Array &appendBool(bool value) {
-    char key[kArrayKeySize];
-    handleIndex(key);
-    Document::appendBool(key, value);
+    Document::appendBool(index_++, value);
 
     return *this;
   }
 
   Array &appendNull() {
-    char key[kArrayKeySize];
-    handleIndex(key);
-    Document::appendNull(key);
+    Document::appendNull(index_++);
 
     return *this;
   }
 
   Array &appendInt32(int32_t value) {
-    char key[kArrayKeySize];
-    handleIndex(key);
-    Document::appendInt32(key, value);
+    Document::appendInt32(index_++, value);
 
     return *this;
   }
 
   Array &appendInt64(int64_t value) {
-    char key[kArrayKeySize];
-    handleIndex(key);
-    Document::appendInt64(key, value);
+    Document::appendInt64(index_++, value);
 
     return *this;
   }
@@ -95,7 +77,7 @@ public:
   }
 
   int handleIndex(char key[]) {
-    int ret = snprintf(key, kArrayKeySize, "%lu", index_);
+    int ret = convert_int_key_to_str(index_, key);
     index_++;
     return ret;
   }
@@ -112,13 +94,20 @@ int array_handle_index_(Array &arr, char key[]) {
   return arr.handleIndex(key);
 }
 
-// Implementation for member in document.hpp
+// Implementations for members in document.hpp
 Document &Document::appendArray(const char key[],
                                 std::function<void(Array &)> builder) {
   Array child(key, this);
   builder(child);
 
   return *this;
+}
+
+Document &Document::appendArray(int32_t ikey,
+                                std::function<void(Array &)> builder) {
+  char skey[kIntKeySize];
+  convert_int_key_to_str(ikey, skey);
+  return appendArray(skey, builder);
 }
 
 } // namespace serializer

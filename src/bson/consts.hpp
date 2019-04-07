@@ -6,7 +6,11 @@
 namespace pot {
 namespace bson {
 
-static constexpr size_t kArrayKeySize = 12;
+static constexpr size_t kIntKeySize = 12;
+
+inline int convert_int_key_to_str(int32_t ikey, char skey[]) {
+  return snprintf(skey, kIntKeySize, "%d", ikey);
+}
 
 enum struct TypeSize : uint8_t {
   Byte = 1,
