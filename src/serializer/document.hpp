@@ -62,8 +62,13 @@ public:
     return *this;
   }
 
-  Document &appendBinary(const char key[], uint8_t buf[], size_t len) {
-    writeElement(Element::Binary, key, buf, len);
+  Document &appendBinary(const char key[], uint8_t buf[], int32_t len) {
+    writeByte(Element::Binary);
+    writeStr(key);
+
+    writeInt32(len);
+    writeByte(BinaryElementSubtype::Generic);
+    writeBuf(buf, len);
 
     return *this;
   }
@@ -192,6 +197,10 @@ private:
 
   void writeByte(Element type) {
     writeByte(static_cast<uint8_t>(type));
+  }
+
+  void writeByte(BinaryElementSubtype binType) {
+    writeByte(static_cast<uint8_t>(binType));
   }
 
   void writeByte(uint8_t byte) {

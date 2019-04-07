@@ -78,4 +78,88 @@ public:
     TS_ASSERT_EQUALS(res.status, bsons::Status::Ok);
     TS_ASSERT_EQUALS(res.len, 22);
   }
+
+  void testSimpleDocumentBinary() {
+    bsons::Result res =
+        bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {
+          uint8_t bin[] = { 1, 2, 3, 2, 1 };
+          doc.appendBinary("a", bin, 5);
+        });
+
+    uint8_t expected[kBufSize] = {
+      0x12, 0x00, 0x00, 0x00, 0x05, 0x61, 0x00, 0x05, 0x00,
+      0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x02, 0x01, 0x00,
+    };
+    clear_buf(expected, 18, kBufSize);
+
+    TS_ASSERT_SAME_DATA(buf, expected, kBufSize);
+    TS_ASSERT_EQUALS(res.status, bsons::Status::Ok);
+    TS_ASSERT_EQUALS(res.len, 18);
+  }
+
+  void testSimpleDocumentBool() {
+    bsons::Result res =
+        bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {
+          doc.appendBool("true", true);
+          doc.appendBool("false", false);
+        });
+
+    uint8_t expected[kBufSize] = {
+      0x14, 0x00, 0x00, 0x00, 0x08, 0x74, 0x72, 0x75, 0x65, 0x00,
+      0x01, 0x08, 0x66, 0x61, 0x6C, 0x73, 0x65, 0x00, 0x00, 0x00,
+    };
+    clear_buf(expected, 20, kBufSize);
+
+    TS_ASSERT_SAME_DATA(buf, expected, kBufSize);
+    TS_ASSERT_EQUALS(res.status, bsons::Status::Ok);
+    TS_ASSERT_EQUALS(res.len, 20);
+  }
+
+  void testSimpleDocumentNull() {
+    bsons::Result res = bsons::Document::build(
+        buf, kBufSize, [](bsons::Document &doc) { doc.appendNull("nil"); });
+
+    uint8_t expected[kBufSize] = {
+      0x0A, 0x00, 0x00, 0x00, 0x0A, 0x6E, 0x69, 0x6C, 0x00, 0x00,
+    };
+    clear_buf(expected, 10, kBufSize);
+
+    TS_ASSERT_SAME_DATA(buf, expected, kBufSize);
+    TS_ASSERT_EQUALS(res.status, bsons::Status::Ok);
+    TS_ASSERT_EQUALS(res.len, 10);
+  }
+
+  void testSimpleDocumentInt32() {
+    bsons::Result res =
+        bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {
+          doc.appendInt32("val", 9812);
+        });
+
+    uint8_t expected[kBufSize] = {
+      0x0E, 0x00, 0x00, 0x00, 0x10, 0x76, 0x61,
+      0x6C, 0x00, 0x54, 0x26, 0x00, 0x00, 0x00,
+    };
+    clear_buf(expected, 14, kBufSize);
+
+    TS_ASSERT_SAME_DATA(buf, expected, kBufSize);
+    TS_ASSERT_EQUALS(res.status, bsons::Status::Ok);
+    TS_ASSERT_EQUALS(res.len, 14);
+  }
+
+  void testSimpleDocumentInt64() {
+    bsons::Result res =
+        bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {
+          doc.appendInt64("val", 98761234);
+        });
+
+    uint8_t expected[kBufSize] = {
+      0x12, 0x00, 0x00, 0x00, 0x12, 0x76, 0x61, 0x6C, 0x00,
+      0x12, 0xFA, 0xE2, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00,
+    };
+    clear_buf(expected, 18, kBufSize);
+
+    TS_ASSERT_SAME_DATA(buf, expected, kBufSize);
+    TS_ASSERT_EQUALS(res.status, bsons::Status::Ok);
+    TS_ASSERT_EQUALS(res.len, 18);
+  }
 };
