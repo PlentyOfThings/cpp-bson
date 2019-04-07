@@ -257,4 +257,17 @@ public:
     TS_ASSERT_EQUALS(res.status, bsons::Status::Ok);
     TS_ASSERT_EQUALS(res.len, 250);
   }
+
+  void testBufferOverflow() {
+    uint8_t smallBuf[5] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+
+    bsons::Result res =
+        bsons::Document::build(smallBuf, 1, [](bsons::Document &doc) {});
+
+    uint8_t expected[5] = { 0x05, 0xFF, 0xFF, 0xFF, 0xFF };
+
+    TS_ASSERT_SAME_DATA(smallBuf, expected, 5);
+    TS_ASSERT_EQUALS(res.status, bsons::Status::BufferOverflow);
+    TS_ASSERT_EQUALS(res.len, 5);
+  }
 };
