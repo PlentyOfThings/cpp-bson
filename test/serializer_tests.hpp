@@ -1,4 +1,4 @@
-#include "../src/bson.h"
+#include "../src/bson/bson.h"
 #include "./utils.hpp"
 #include "cxxtest/TestSuite.h"
 
