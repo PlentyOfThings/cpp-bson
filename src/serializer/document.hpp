@@ -15,16 +15,22 @@ class Document {
 public:
   static Result build(uint8_t buf[], size_t len, void (*builder)(Document &)) {
     Document doc(buf, len);
-    doc.start();
     builder(doc);
     return doc.end();
   }
 
-  Document(uint8_t buf[], size_t len) : buffer_(buf), buffer_length_(len) {}
+  Document(uint8_t buf[], size_t len) : buffer_(buf), buffer_length_(len) {
+    start();
+  }
 
-  Document(Document &parent) :
-      buffer_(parent.buffer_), buffer_length_(parent.buffer_length_),
-      current_(parent.current_), start_(parent.start_) {}
+  Document(Document *parent) :
+      buffer_(parent->buffer_), buffer_length_(parent->buffer_length_),
+      current_(parent->current_), start_(parent->current_), parent_(parent) {
+    start();
+  }
+
+  Document(const Document &) = delete;
+  void operator=(const Document &) = delete;
 
   Document &appendDouble(const char key[], double value) {
     uint8_t buf[static_cast<size_t>(TypeSize::Double)];
@@ -46,10 +52,12 @@ public:
   }
 
   Document &appendDoc(const char key[], void (*builder)(Document &)) {
-    Document child(*this);
+    writeByte(Element::Document);
+    writeStr(key);
+
+    Document child(this);
     builder(child);
     child.end();
-    syncWith(child);
 
     return *this;
   }
@@ -106,13 +114,13 @@ public:
     size_t tmp_current = current_;
 
     // Switch over to start.
-    current_ = start_;
+    setCurrent(start_);
 
     // Write the length of the document.
     writeInt32(len);
 
     // Restore current buffer index.
-    current_ = tmp_current;
+    setCurrent(tmp_current);
 
     Result res;
     res.len = len;
@@ -125,15 +133,12 @@ public:
     return res;
   }
 
-  void syncWith(Document &child) {
-    current_ = child.current_;
-  }
-
 private:
   uint8_t *buffer_;
   size_t buffer_length_;
   size_t current_ = 0;
   size_t start_ = 0;
+  Document *parent_ = nullptr;
 
   void start() {
     writeInt32(0);
@@ -193,7 +198,21 @@ private:
     if (current_ < buffer_length_) {
       buffer_[current_] = byte;
     }
+    intCurrent();
+  }
+
+  void intCurrent() {
     current_++;
+    if (parent_) {
+      parent_->intCurrent();
+    }
+  }
+
+  void setCurrent(size_t cur) {
+    current_ = cur;
+    if (parent_) {
+      parent_->setCurrent(cur);
+    }
   }
 };
 

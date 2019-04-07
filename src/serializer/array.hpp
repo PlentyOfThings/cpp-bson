@@ -15,16 +15,16 @@ static constexpr size_t kKeySize = 12;
 class Array {
 public:
   static Array from(Document &current) {
-    Array arr(current);
+    Array arr(&current);
     return arr;
   }
 
-  Array(Document &current) : doc_(current) {}
+  Array(Document *current) : doc_(current) {}
 
   Array &appendDouble(double value) {
     char key[kKeySize];
     handleIndex(key);
-    doc_.appendDouble(key, value);
+    doc_->appendDouble(key, value);
 
     return *this;
   }
@@ -32,7 +32,7 @@ public:
   Array &appendStr(const char str[]) {
     char key[kKeySize];
     handleIndex(key);
-    doc_.appendStr(key, str);
+    doc_->appendStr(key, str);
 
     return *this;
   }
@@ -40,7 +40,7 @@ public:
   Array &appendDoc(void (*builder)(Document &)) {
     char key[kKeySize];
     handleIndex(key);
-    doc_.appendDoc(key, builder);
+    doc_->appendDoc(key, builder);
 
     return *this;
   }
@@ -48,7 +48,7 @@ public:
   Array &appendBinary(uint8_t buf[], size_t len) {
     char key[kKeySize];
     handleIndex(key);
-    doc_.appendBinary(key, buf, len);
+    doc_->appendBinary(key, buf, len);
 
     return *this;
   }
@@ -56,7 +56,7 @@ public:
   Array &appendBool(bool value) {
     char key[kKeySize];
     handleIndex(key);
-    doc_.appendBool(key, value);
+    doc_->appendBool(key, value);
 
     return *this;
   }
@@ -64,7 +64,7 @@ public:
   Array &appendNull() {
     char key[kKeySize];
     handleIndex(key);
-    doc_.appendNull(key);
+    doc_->appendNull(key);
 
     return *this;
   }
@@ -72,7 +72,7 @@ public:
   Array &appendInt32(int32_t value) {
     char key[kKeySize];
     handleIndex(key);
-    doc_.appendInt32(key, value);
+    doc_->appendInt32(key, value);
 
     return *this;
   }
@@ -80,13 +80,13 @@ public:
   Array &appendInt64(int64_t value) {
     char key[kKeySize];
     handleIndex(key);
-    doc_.appendInt64(key, value);
+    doc_->appendInt64(key, value);
 
     return *this;
   }
 
 private:
-  Document doc_;
+  Document *doc_;
   size_t index_ = 0;
 
   int handleIndex(char key[]) {
