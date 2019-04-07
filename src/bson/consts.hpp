@@ -1,6 +1,7 @@
 #ifndef POT_BSON_CONSTS_H_
 #define POT_BSON_CONSTS_H_
 
+#include <stdio.h>
 #include <stdlib.h>
 
 namespace pot {
