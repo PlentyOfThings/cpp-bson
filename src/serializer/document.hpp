@@ -52,12 +52,13 @@ public:
   }
 
   Document &appendDoc(const char key[], void (*builder)(Document &)) {
-    writeByte(Element::Document);
-    writeStr(key);
+    writeDoc(Element::Document, key, builder);
 
-    Document child(this);
-    builder(child);
-    child.end();
+    return *this;
+  }
+
+  Document &appendArray(const char key[], void (*builder)(Document &)) {
+    writeDoc(Element::Array, key, builder);
 
     return *this;
   }
@@ -147,6 +148,15 @@ private:
 
   void start() {
     writeInt32(0);
+  }
+
+  void writeDoc(Element type, const char key[], void (*builder)(Document &)) {
+    writeByte(type);
+    writeStr(key);
+
+    Document child(this);
+    builder(child);
+    child.end();
   }
 
   void writeElement(Element type, const char key[], uint8_t buf[],

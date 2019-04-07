@@ -14,11 +14,6 @@ static constexpr size_t kKeySize = 12;
 
 class Array {
 public:
-  static Array from(Document &current) {
-    Array arr(&current);
-    return arr;
-  }
-
   Array(Document *current) : doc_(current) {}
 
   Array &appendDouble(double value) {
