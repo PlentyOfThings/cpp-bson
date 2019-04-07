@@ -21,74 +21,66 @@ public:
 
   Array(Document &current) : doc_(current) {}
 
-  Array &append(double value) {
+  Array &appendDouble(double value) {
     char key[kKeySize];
     handleIndex(key);
-    doc_.append(key, value);
+    doc_.appendDouble(key, value);
 
     return *this;
   }
 
-  Array &append(const char str[]) {
+  Array &appendStr(const char str[]) {
     char key[kKeySize];
     handleIndex(key);
-    doc_.append(key, str);
+    doc_.appendStr(key, str);
 
     return *this;
   }
 
-  Array &append(void (*builder)(Document &)) {
+  Array &appendDoc(void (*builder)(Document &)) {
     char key[kKeySize];
     handleIndex(key);
-    doc_.append(key, builder);
+    doc_.appendDoc(key, builder);
 
     return *this;
   }
 
-  Array &append(void (*builder)(Array &)) {
+  Array &appendBinary(uint8_t buf[], size_t len) {
     char key[kKeySize];
     handleIndex(key);
-    doc_.append(key, builder);
+    doc_.appendBinary(key, buf, len);
 
     return *this;
   }
 
-  Array &append(uint8_t buf[], size_t len) {
+  Array &appendBool(bool value) {
     char key[kKeySize];
     handleIndex(key);
-    doc_.append(key, buf, len);
+    doc_.appendBool(key, value);
 
     return *this;
   }
 
-  Array &append(bool value) {
+  Array &appendNull() {
     char key[kKeySize];
     handleIndex(key);
-    doc_.append(key, value);
+    doc_.appendNull(key);
 
     return *this;
   }
 
-  Array &append() {
+  Array &appendInt32(int32_t value) {
     char key[kKeySize];
     handleIndex(key);
-    doc_.append(key);
+    doc_.appendInt32(key, value);
 
     return *this;
   }
 
-  Array &append(int32_t value) {
+  Array &appendInt64(int64_t value) {
     char key[kKeySize];
     handleIndex(key);
-    doc_.append(key, value);
-
-    return *this;
-  }
-
-  Array &append(int64_t value) {
-    char key[kKeySize];
-    handleIndex(key);
-    doc_.append(key, value);
+    doc_.appendInt64(key, value);
 
     return *this;
   }

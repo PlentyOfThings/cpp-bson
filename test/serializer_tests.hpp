@@ -27,8 +27,10 @@ public:
     uint8_t buf[kBufSize];
     clear_buf(buf, kBufSize);
 
-    bsons::Result res = bsons::Document::build(
-        buf, kBufSize, [](bsons::Document &doc) { doc.append("a", 0.2); });
+    bsons::Result res =
+        bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {
+          doc.appendDouble("a", 0.2);
+        });
 
     uint8_t expected[kBufSize] = {
       0x10, 0x00, 0x00, 0x00, 0x01, 0x61, 0x00, 0x9A,
@@ -47,7 +49,7 @@ public:
 
     bsons::Result res =
         bsons::Document::build(buf, kBufSize, [](bsons::Document &doc) {
-          doc.append("hello", "world");
+          doc.appendStr("hello", "world");
         });
 
     uint8_t expected[kBufSize] = {

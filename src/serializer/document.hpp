@@ -26,7 +26,7 @@ public:
       buffer_(parent.buffer_), buffer_length_(parent.buffer_length_),
       current_(parent.current_), start_(parent.start_) {}
 
-  Document &append(const char key[], double value) {
+  Document &appendDouble(const char key[], double value) {
     uint8_t buf[static_cast<size_t>(TypeSize::Double)];
     endian::primitive_to_buffer<double, TypeSize::Double>(buf, value);
     writeElement(Element::Double, key, buf, TypeSize::Double);
@@ -34,7 +34,7 @@ public:
     return *this;
   }
 
-  Document &append(const char key[], const char str[]) {
+  Document &appendStr(const char key[], const char str[]) {
     writeByte(Element::String);
     writeStr(key);
 
@@ -45,7 +45,7 @@ public:
     return *this;
   }
 
-  Document &append(const char key[], void (*builder)(Document)) {
+  Document &appendDoc(const char key[], void (*builder)(Document &)) {
     Document child(*this);
     builder(child);
     child.end();
@@ -54,13 +54,13 @@ public:
     return *this;
   }
 
-  Document &append(const char key[], uint8_t buf[], size_t len) {
+  Document &appendBinary(const char key[], uint8_t buf[], size_t len) {
     writeElement(Element::Binary, key, buf, len);
 
     return *this;
   }
 
-  Document &append(const char key[], bool value) {
+  Document &appendBool(const char key[], bool value) {
     writeByte(Element::Boolean);
     writeStr(key);
 
@@ -73,14 +73,14 @@ public:
     return *this;
   }
 
-  Document &append(const char key[]) {
+  Document &appendNull(const char key[]) {
     writeByte(Element::Null);
     writeStr(key);
 
     return *this;
   }
 
-  Document &append(const char key[], int32_t value) {
+  Document &appendInt32(const char key[], int32_t value) {
     writeByte(Element::Int32);
     writeStr(key);
     writeInt32(value);
@@ -88,7 +88,7 @@ public:
     return *this;
   }
 
-  Document &append(const char key[], int64_t value) {
+  Document &appendInt64(const char key[], int64_t value) {
     uint8_t buf[static_cast<size_t>(TypeSize::Int64)];
     endian::primitive_to_buffer<int64_t, TypeSize::Int64>(buf, value);
     writeElement(Element::Int64, key, buf, TypeSize::Int64);
