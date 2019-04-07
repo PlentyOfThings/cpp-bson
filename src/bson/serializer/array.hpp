@@ -18,6 +18,9 @@ public:
       Document(key, parent, Element::Array) {}
   Array(Array &parent) : Document(parent, Element::Array) {}
 
+  Array(const Array &) = delete;
+  void operator=(const Array &) = delete;
+
   Array &appendDouble(double value) {
     Document::appendDouble(index_++, value);
 
