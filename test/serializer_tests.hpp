@@ -8,7 +8,7 @@ static constexpr size_t kBufSize = 256;
 
 class SerializerTests : public CxxTest::TestSuite {
 public:
-  void test_empty_document() {
+  void testEmptyDocument() {
     uint8_t buf[kBufSize];
     clear_buf(buf, kBufSize);
 
@@ -23,7 +23,7 @@ public:
     TS_ASSERT_EQUALS(res.len, 5);
   }
 
-  void test_simple_document_double() {
+  void testSimpleDocumentDouble() {
     uint8_t buf[kBufSize];
     clear_buf(buf, kBufSize);
 
@@ -43,7 +43,7 @@ public:
     TS_ASSERT_EQUALS(res.len, 16);
   }
 
-  void test_simple_document_string() {
+  void testSimpleDocumentString() {
     uint8_t buf[kBufSize];
     clear_buf(buf, kBufSize);
 
