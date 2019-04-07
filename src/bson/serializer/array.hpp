@@ -33,14 +33,14 @@ public:
     return *this;
   }
 
-  Array &appendDocument(std::function<void(Document &)> builder) {
-    Document::appendDocument(index_++, builder);
+  Array &appendDoc(std::function<void(Document &)> builder) {
+    Document::appendDoc(index_++, builder);
 
     return *this;
   }
 
-  Array &appendArray(std::function<void(Array &)> builder) {
-    Document::appendArray(index_++, builder);
+  Array &appendArr(std::function<void(Array &)> builder) {
+    Document::appendArr(index_++, builder);
 
     return *this;
   }
@@ -98,19 +98,19 @@ int array_handle_index_(Array &arr, char key[]) {
 }
 
 // Implementations for members in document.hpp
-Document &Document::appendArray(const char key[],
-                                std::function<void(Array &)> builder) {
+Document &Document::appendArr(const char key[],
+                              std::function<void(Array &)> builder) {
   Array child(key, this);
   builder(child);
 
   return *this;
 }
 
-Document &Document::appendArray(int32_t ikey,
-                                std::function<void(Array &)> builder) {
+Document &Document::appendArr(int32_t ikey,
+                              std::function<void(Array &)> builder) {
   char skey[kIntKeySize];
   convert_int_key_to_str(ikey, skey);
-  return appendArray(skey, builder);
+  return appendArr(skey, builder);
 }
 
 } // namespace serializer

@@ -196,28 +196,27 @@ public:
         bsons::Document::build(buf, kBufSize, [bin](bsons::Document &doc) {
           doc.appendDouble("dbl", 0.4)
               .appendStr("str", "string")
-              .appendDocument("doc",
-                              [](bsons::Document &ndoc) {
-                                ndoc.appendStr("this", "is")
-                                    .appendStr("a", "nested")
-                                    .appendStr("doc", "ument");
-                              })
+              .appendDoc("doc",
+                         [](bsons::Document &ndoc) {
+                           ndoc.appendStr("this", "is")
+                               .appendStr("a", "nested")
+                               .appendStr("doc", "ument");
+                         })
               .appendBinary("buf", bin, 4)
-              .appendDocument("bools",
-                              [](bsons::Document &ndoc) {
-                                ndoc.appendBool("t", true).appendBool("f",
-                                                                      false);
-                              })
+              .appendDoc("bools",
+                         [](bsons::Document &ndoc) {
+                           ndoc.appendBool("t", true).appendBool("f", false);
+                         })
               .appendNull("nil")
-              .appendDocument(
+              .appendDoc(
                   "ints",
                   [](bsons::Document &ndoc) {
                     ndoc.appendInt32("32", 9876).appendInt64("64", 987654321);
                   })
-              .appendArray("arr", [bin](bsons::Array &narr) {
+              .appendArr("arr", [bin](bsons::Array &narr) {
                 narr.appendDouble(0.2)
                     .appendStr("element")
-                    .appendDocument(
+                    .appendDoc(
                         [](bsons::Document &ndoc) { ndoc.appendStr("a", "b"); })
                     .appendBinary(bin, 4)
                     .appendBool(true)

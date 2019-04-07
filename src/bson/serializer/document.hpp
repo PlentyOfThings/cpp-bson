@@ -75,24 +75,23 @@ public:
     return appendStr(skey, str);
   }
 
-  Document &appendDocument(const char key[],
-                           std::function<void(Document &)> builder) {
+  Document &appendDoc(const char key[],
+                      std::function<void(Document &)> builder) {
     Document child(key, this);
     builder(child);
 
     return *this;
   }
 
-  Document &appendDocument(int32_t ikey,
-                           std::function<void(Document &)> builder) {
+  Document &appendDoc(int32_t ikey, std::function<void(Document &)> builder) {
     char skey[kIntKeySize];
     convert_int_key_to_str(ikey, skey);
-    return appendDocument(skey, builder);
+    return appendDoc(skey, builder);
   }
 
   // Implemented in array.hpp
-  Document &appendArray(const char key[], std::function<void(Array &)> builder);
-  Document &appendArray(int32_t ikey, std::function<void(Array &)> builder);
+  Document &appendArr(const char key[], std::function<void(Array &)> builder);
+  Document &appendArr(int32_t ikey, std::function<void(Array &)> builder);
 
   Document &appendBinary(const char key[], const uint8_t buf[], int32_t len) {
     writeByte(Element::Binary);
