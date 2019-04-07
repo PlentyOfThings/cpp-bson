@@ -4,6 +4,7 @@
 #include "../consts.hpp"
 #include "../endian.hpp"
 #include "./result.hpp"
+#include <functional>
 #include <stdlib.h>
 #include <string.h>
 
@@ -19,6 +20,14 @@ int array_handle_index_(Array &arr, char key[]);
 
 class Document {
 public:
+  static Result build(uint8_t buf[], size_t len,
+                      std::function<void(Document &)> builder) {
+    Document doc(buf, len);
+    builder(doc);
+
+    return doc.end();
+  }
+
   Document(uint8_t buf[], size_t len) : buffer_(buf), buffer_length_(len) {
     start();
   }
@@ -54,7 +63,18 @@ public:
     return *this;
   }
 
-  Document &appendBinary(const char key[], uint8_t buf[], int32_t len) {
+  Document &appendDocument(const char key[],
+                           std::function<void(Document &)> builder) {
+    Document child(key, this);
+    builder(child);
+
+    return *this;
+  }
+
+  // Implemented in array.hpp
+  Document &appendArray(const char key[], std::function<void(Array &)> builder);
+
+  Document &appendBinary(const char key[], const uint8_t buf[], int32_t len) {
     writeByte(Element::Binary);
     writeStr(key);
 
@@ -218,7 +238,7 @@ protected:
     writeBuf(buf, static_cast<size_t>(size));
   }
 
-  void writeBuf(uint8_t buf[], size_t len) {
+  void writeBuf(const uint8_t buf[], size_t len) {
     for (size_t i = 0; i < len; i++) {
       writeByte(buf[i]);
     }

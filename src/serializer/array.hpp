@@ -4,6 +4,7 @@
 #include "../consts.hpp"
 #include "./document.hpp"
 #include "./result.hpp"
+#include <functional>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -33,7 +34,23 @@ public:
     return *this;
   }
 
-  Array &appendBinary(uint8_t buf[], size_t len) {
+  Array &appendDocument(std::function<void(Document &)> builder) {
+    char key[kArrayKeySize];
+    handleIndex(key);
+    Document::appendDocument(key, builder);
+
+    return *this;
+  }
+
+  Array &appendArray(std::function<void(Array &)> builder) {
+    char key[kArrayKeySize];
+    handleIndex(key);
+    Document::appendArray(key, builder);
+
+    return *this;
+  }
+
+  Array &appendBinary(const uint8_t buf[], size_t len) {
     char key[kArrayKeySize];
     handleIndex(key);
     Document::appendBinary(key, buf, len);
@@ -93,6 +110,15 @@ Document *array_get_working_doc_(Array &arr) {
 
 int array_handle_index_(Array &arr, char key[]) {
   return arr.handleIndex(key);
+}
+
+// Implementation for member in document.hpp
+Document &Document::appendArray(const char key[],
+                                std::function<void(Array &)> builder) {
+  Array child(key, this);
+  builder(child);
+
+  return *this;
 }
 
 } // namespace serializer
