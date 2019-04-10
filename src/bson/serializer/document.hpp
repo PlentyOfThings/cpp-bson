@@ -297,8 +297,8 @@ protected:
     writeByte(static_cast<uint8_t>(type));
   }
 
-  void writeByte(BinaryElementSubtype binType) {
-    writeByte(static_cast<uint8_t>(binType));
+  void writeByte(BinaryElementSubtype bin_type) {
+    writeByte(static_cast<uint8_t>(bin_type));
   }
 
   void writeByte(uint8_t byte) {
