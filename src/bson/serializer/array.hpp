@@ -4,9 +4,9 @@
 #include "../consts.hpp"
 #include "./document.hpp"
 #include "./result.hpp"
+#include <cstdio>
+#include <cstdlib>
 #include <functional>
-#include <stdio.h>
-#include <stdlib.h>
 
 namespace pot {
 namespace bson {

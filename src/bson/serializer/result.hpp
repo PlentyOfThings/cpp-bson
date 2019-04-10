@@ -1,7 +1,7 @@
 #ifndef POT_BSON_SERIALIZER_RESULT_H_
 #define POT_BSON_SERIALIZER_RESULT_H_
 
-#include <stdlib.h>
+#include <cstdlib>
 
 namespace pot {
 namespace bson {
