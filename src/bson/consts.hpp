@@ -19,10 +19,10 @@ enum struct TypeSize : uint8_t {
   Int64 = 8,
   Uint64 = 8,
   Double = 8,
-  Decimal128 = 16,
 };
 
 enum struct Element : uint8_t {
+  Terminator = 0x00,
   Double = 0x01,
   String = 0x02, // can contain null chars
   Document = 0x03,
@@ -32,7 +32,6 @@ enum struct Element : uint8_t {
   Null = 0x0A,
   Int32 = 0x10,
   Int64 = 0x12,
-  Decimal128 = 0x13,
 };
 
 enum struct BinaryElementSubtype : uint8_t {

@@ -173,7 +173,7 @@ public:
   Result end() {
     int32_t len;
     if (!ended_) {
-      writeByte(0);
+      writeByte(Element::Terminator);
 
       // Store length of the document.
       len = getLength();
@@ -265,15 +265,10 @@ protected:
   void writeStr(const char str[]) {
     size_t i = 0;
     char chr;
-    while (true) {
+    do {
       chr = str[i++];
-
       writeByte(chr);
-
-      if (chr == '\0') {
-        break;
-      }
-    }
+    } while (chr != '\0');
   }
 
   void writeInt32(int32_t value) {
