@@ -36,7 +36,7 @@ void primitive_to_buffer(uint8_t buf[], T value) {
 }
 
 template <typename T, TypeSize size>
-T buffer_to_primitive(uint8_t buf[], size_t start) {
+T buffer_to_primitive(const uint8_t buf[], size_t start) {
   ConvUnion<T, size> convert;
   uint8_t len = static_cast<uint8_t>(size);
 

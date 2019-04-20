@@ -7,14 +7,14 @@ TEST=test
 TEST_BIN=$(TEST)/bin
 TEST_RUNNER=$(TEST_BIN)/runner.cpp
 TEST_EXE=$(TEST_BIN)/runner
-TEST_SRC=$(TEST)/serializer_tests.hpp
+TEST_SRC=$(TEST)/*_tests.hpp
 
 FMT=./scripts/fmt.sh
 
 EXLIBS=external_lib
 CXXTEST_DIR=$(EXLIBS)/cxxtest
 CXXTEST_BIN=$(CXXTEST_DIR)/bin
-CXXTEST=python3 $(CXXTEST_BIN)/cxxtestgen --error-printer -o $(TEST_RUNNER) --fog-parser
+CXXTEST=python3 $(CXXTEST_BIN)/cxxtestgen --error-printer -o $(TEST_RUNNER) --fog-parser --have-eh
 
 CXX_FLAGS=-std=c++11 -Wall -I$(CXXTEST_DIR)
 
