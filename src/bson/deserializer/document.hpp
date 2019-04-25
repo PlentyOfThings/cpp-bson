@@ -3,7 +3,6 @@
 
 #include "../consts.hpp"
 #include "../endian.hpp"
-#include "./validation_options.hpp"
 #include <cstdlib>
 
 namespace pot {
@@ -11,8 +10,6 @@ namespace bson {
 namespace deserializer {
 
 class Array;
-
-bool array_valid_(Array &arr);
 
 #define __POT_BSON_VALID_SIZE_CHECK(buf_len, current, size) \
   if ((current + size) > buf_len) {                         \
@@ -27,10 +24,9 @@ public:
   Document(const uint8_t buf[], size_t len) :
       buffer_(buf), buffer_length_(len) {}
 
-  template <size_t elm_name_buf_size = 50>
-  bool valid(const ValidationOptions opts) {
+  template <size_t elm_name_buf_size = 50> bool valid() {
     size_t current = 0;
-    return valid<elm_name_buf_size>(opts, current);
+    return valid<elm_name_buf_size>(current);
   }
 
 private:
@@ -38,8 +34,7 @@ private:
   size_t buffer_length_;
 
   template <size_t elm_name_buf_size>
-  bool valid(const ValidationOptions opts, size_t &current,
-             bool array_doc = false) {
+  bool valid(size_t &current, bool array_doc = false) {
     size_t start = current;
 
     // Handle document size.
@@ -78,10 +73,9 @@ private:
         }
       } while (name_chr != '\0');
 
-      // If we are validating an array document, and we want to valid the array
-      // element names, then double check that the element name is the same as
-      // the current index.
-      if (array_doc && opts.valid_array_indices) {
+      // If we are validating an array document then double check that the
+      // element name is the same as the current index.
+      if (array_doc) {
         convert_int_key_to_str(element_index, element_index_str);
         if (strncmp(element_name, element_index_str,
                     kIntKeySize < elm_name_buf_size ? kIntKeySize
@@ -122,7 +116,7 @@ private:
         }
         case static_cast<uint8_t>(Element::Document): {
           // Handle nested document.
-          if (!valid<elm_name_buf_size>(opts, current)) {
+          if (!valid<elm_name_buf_size>(current)) {
             return false;
           }
           break;
@@ -131,7 +125,7 @@ private:
           // Handle nested array.
           // Since arrays are just documents with numerical indices,
           // we can use the same logic to handle them.
-          if (!valid<elm_name_buf_size>(opts, current, true)) {
+          if (!valid<elm_name_buf_size>(current, true)) {
             return false;
           }
           break;
@@ -195,11 +189,7 @@ private:
       element_index++;
     }
 
-    if (opts.correct_doc_length) {
-      return (current - start) == doc_size;
-    } else {
-      return true;
-    }
+    return (current - start) == doc_size;
   }
 };
 

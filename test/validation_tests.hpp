@@ -10,7 +10,7 @@ public:
 
     bsond::Document doc(buf, sizeof(buf));
 
-    TS_ASSERT(doc.valid<10>(bsond::default_validation_options));
+    TS_ASSERT(doc.valid<10>());
   }
 
   void testInvalidIncompleteEmptyDocument() {
@@ -18,17 +18,17 @@ public:
 
     {
       bsond::Document doc(buf, sizeof(buf) - 1);
-      TS_ASSERT(!doc.valid(bsond::default_validation_options));
+      TS_ASSERT(!doc.valid());
     }
 
     {
       bsond::Document doc(buf, sizeof(buf) - 2);
-      TS_ASSERT(!doc.valid(bsond::default_validation_options));
+      TS_ASSERT(!doc.valid());
     }
 
     {
       bsond::Document doc(buf, sizeof(buf) - 3);
-      TS_ASSERT(!doc.valid(bsond::default_validation_options));
+      TS_ASSERT(!doc.valid());
     }
   }
 
@@ -36,28 +36,13 @@ public:
     {
       uint8_t buf[] = { 0x06, 0x00, 0x00, 0x00, 0x00 };
       bsond::Document doc(buf, sizeof(buf));
-      TS_ASSERT(!doc.valid(bsond::default_validation_options));
+      TS_ASSERT(!doc.valid());
     }
 
     {
       uint8_t buf[] = { 0x04, 0x00, 0x00, 0x00, 0x00 };
       bsond::Document doc(buf, sizeof(buf));
-      TS_ASSERT(!doc.valid(bsond::default_validation_options));
-    }
-
-    bsond::ValidationOptions opts = { .correct_doc_length = false,
-                                      .valid_array_indices = true };
-
-    {
-      uint8_t buf[] = { 0x06, 0x00, 0x00, 0x00, 0x00 };
-      bsond::Document doc(buf, sizeof(buf));
-      TS_ASSERT(doc.valid(opts));
-    }
-
-    {
-      uint8_t buf[] = { 0x04, 0x00, 0x00, 0x00, 0x00 };
-      bsond::Document doc(buf, sizeof(buf));
-      TS_ASSERT(doc.valid(opts));
+      TS_ASSERT(!doc.valid());
     }
   }
 
@@ -68,7 +53,7 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    TS_ASSERT(doc.valid(bsond::default_validation_options));
+    TS_ASSERT(doc.valid());
   }
 
   void testString() {
@@ -79,7 +64,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(doc.valid(bsond::default_validation_options));
+      TS_ASSERT(doc.valid());
     }
 
     {
@@ -89,7 +74,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(!doc.valid(bsond::default_validation_options));
+      TS_ASSERT(!doc.valid());
     }
 
     {
@@ -99,7 +84,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(!doc.valid(bsond::default_validation_options));
+      TS_ASSERT(!doc.valid());
     }
 
     {
@@ -109,7 +94,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(!doc.valid<2>(bsond::default_validation_options));
+      TS_ASSERT(!doc.valid<2>());
     }
   }
 
@@ -121,7 +106,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(doc.valid(bsond::default_validation_options));
+      TS_ASSERT(doc.valid());
     }
 
     {
@@ -131,18 +116,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(!doc.valid(bsond::default_validation_options));
-    }
-
-    {
-      uint8_t buf[] = {
-        0x16, 0x00, 0x00, 0x00, 0x03, 0x61, 0x00, 0x06, 0x00, 0x00, 0x00,
-        0x02, 0x62, 0x00, 0x02, 0x00, 0x00, 0x00, 0x63, 0x00, 0x00, 0x00,
-      };
-      bsond::Document doc(buf, sizeof(buf));
-
-      TS_ASSERT(doc.valid(
-          { .correct_doc_length = false, .valid_array_indices = true }));
+      TS_ASSERT(!doc.valid());
     }
   }
 
@@ -162,7 +136,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(doc.valid(bsond::default_validation_options));
+      TS_ASSERT(doc.valid());
     }
 
     {
@@ -180,9 +154,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(!doc.valid(bsond::default_validation_options));
-      TS_ASSERT(doc.valid(
-          { .correct_doc_length = true, .valid_array_indices = false }));
+      TS_ASSERT(!doc.valid());
     }
 
     {
@@ -196,7 +168,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(!doc.valid(bsond::default_validation_options));
+      TS_ASSERT(!doc.valid());
     }
   }
 
@@ -207,7 +179,7 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    TS_ASSERT(doc.valid(bsond::default_validation_options));
+    TS_ASSERT(doc.valid());
   }
 
   void testBool() {
@@ -218,7 +190,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(doc.valid(bsond::default_validation_options));
+      TS_ASSERT(doc.valid());
     }
 
     {
@@ -228,7 +200,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(!doc.valid(bsond::default_validation_options));
+      TS_ASSERT(!doc.valid());
     }
 
     {
@@ -238,7 +210,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(!doc.valid(bsond::default_validation_options));
+      TS_ASSERT(!doc.valid());
     }
   }
 
@@ -248,7 +220,7 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    TS_ASSERT(doc.valid(bsond::default_validation_options));
+    TS_ASSERT(doc.valid());
   }
 
   void testInt32() {
@@ -258,7 +230,7 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    TS_ASSERT(doc.valid(bsond::default_validation_options));
+    TS_ASSERT(doc.valid());
   }
 
   void testInt64() {
@@ -268,7 +240,7 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    TS_ASSERT(doc.valid(bsond::default_validation_options));
+    TS_ASSERT(doc.valid());
   }
 
   void testComplexDocument() {
@@ -298,7 +270,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(doc.valid(bsond::default_validation_options));
+      TS_ASSERT(doc.valid());
     }
 
     {
@@ -328,9 +300,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(!doc.valid(bsond::default_validation_options));
-      TS_ASSERT(doc.valid(
-          { .correct_doc_length = false, .valid_array_indices = true }));
+      TS_ASSERT(!doc.valid());
     }
 
     {
@@ -360,7 +330,7 @@ public:
       };
       bsond::Document doc(buf, sizeof(buf));
 
-      TS_ASSERT(!doc.valid(bsond::default_validation_options));
+      TS_ASSERT(!doc.valid());
     }
   }
 };
