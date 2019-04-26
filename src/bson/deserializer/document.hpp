@@ -3,6 +3,7 @@
 
 #include "../consts.hpp"
 #include "../endian.hpp"
+#include "./document_element.hpp"
 #include <cstdlib>
 
 namespace pot {
@@ -10,6 +11,7 @@ namespace bson {
 namespace deserializer {
 
 class Array;
+class DocumentIter;
 
 #define __POT_BSON_VALID_SIZE_CHECK(buf_len, current, size) \
   if ((current + size) > buf_len) {                         \
@@ -20,21 +22,44 @@ class Array;
   __POT_BSON_VALID_SIZE_CHECK(buf_len, current, static_cast<uint8_t>(type_size))
 
 class Document {
-public:
-  Document(const uint8_t buf[], size_t len) :
-      buffer_(buf), buffer_length_(len) {}
+  typedef DocumentIter iterator;
+  typedef ptrdiff_t difference_type;
+  typedef size_t size_type;
+  typedef DocumentElement value_type;
+  typedef DocumentElement *pointer;
+  typedef DocumentElement &reference;
+  friend class DocumentIter;
 
-  template <size_t elm_name_buf_size = 50> bool valid() {
+  friend class DocumentElement;
+
+public:
+  Document(const uint8_t buf[], const size_t len) :
+      buffer_(buf), offset_(0), buffer_length_(len) {}
+
+  template <size_t elm_name_buf_size = 50> bool valid() const {
     size_t current = 0;
     return valid<elm_name_buf_size>(current);
   }
 
+  // Implemented in document_iter.hpp
+  iterator begin() const;
+  iterator end() const;
+
 private:
   const uint8_t *buffer_;
-  size_t buffer_length_;
+  const size_t offset_;
+  const size_t buffer_length_;
+
+  Document(const uint8_t buf[], const size_t len, const size_t offset) :
+      buffer_(buf), offset_(offset), buffer_length_(len) {}
+
+  int32_t len() const {
+    return endian::buffer_to_primitive<int32_t, TypeSize::Int32>(buffer_,
+                                                                 offset_);
+  }
 
   template <size_t elm_name_buf_size>
-  bool valid(size_t &current, bool array_doc = false) {
+  bool valid(size_t &current, const bool array_doc = false) const {
     size_t start = current;
 
     // Handle document size.
@@ -192,6 +217,11 @@ private:
     return (current - start) == doc_size;
   }
 };
+
+Document DocumentElement::getDoc() const {
+  return { this->buffer_, this->buffer_length_,
+           __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET };
+}
 
 } // namespace deserializer
 } // namespace bson
