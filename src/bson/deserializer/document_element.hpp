@@ -48,6 +48,7 @@ bool is_string_equal(const uint8_t buf[], const char cmp[],
 }
 
 class Document;
+class Array;
 
 #define __POT_BSON_DOCUMENT_ELEMENT_NAME_OFFSET \
   this->start_ + static_cast<uint8_t>(TypeSize::Byte)
@@ -95,6 +96,9 @@ public:
 
   // Implemented in document.hpp
   Document getDoc() const;
+
+  // Implemented in array.hpp
+  Array getArr() const;
 
   int getBinary(uint8_t buf[], const size_t len) const {
     int32_t bin_len = getDataLen();

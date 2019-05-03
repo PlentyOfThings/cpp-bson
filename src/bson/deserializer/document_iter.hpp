@@ -9,7 +9,7 @@ namespace pot {
 namespace bson {
 namespace deserializer {
 
-class DocumentIter {
+template <class Element> class DocumentIter {
 public:
   DocumentIter(const Document &doc) : doc_(doc) {
     current_ = doc.offset_ + static_cast<uint8_t>(TypeSize::Int32);
@@ -26,12 +26,12 @@ public:
     return !(*this == other);
   }
 
-  DocumentElement operator*() const {
+  virtual Element operator*() const {
     return { doc_.buffer_, current_, doc_.buffer_length_ };
   }
 
-  DocumentIter &operator++() {
-    DocumentElement el = **this;
+  virtual DocumentIter &operator++() {
+    Element el = **this;
     current_ +=
         // Size of the type byte.
         static_cast<uint8_t>(TypeSize::Byte) +
@@ -42,13 +42,7 @@ public:
     return *this;
   }
 
-  DocumentIter operator++(int) {
-    DocumentIter copy(*this);
-    ++*this;
-    return copy;
-  }
-
-private:
+protected:
   const Document &doc_;
   size_t current_;
 };

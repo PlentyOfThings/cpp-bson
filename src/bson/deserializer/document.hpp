@@ -3,6 +3,7 @@
 
 #include "../consts.hpp"
 #include "../endian.hpp"
+#include "./array_element.hpp"
 #include "./document_element.hpp"
 #include <cstdlib>
 
@@ -11,7 +12,8 @@ namespace bson {
 namespace deserializer {
 
 class Array;
-class DocumentIter;
+template <class Element> class ArrayIter;
+template <class Element> class DocumentIter;
 
 #define __POT_BSON_VALID_SIZE_CHECK(buf_len, current, size) \
   if ((current + size) > buf_len) {                         \
@@ -22,14 +24,16 @@ class DocumentIter;
   __POT_BSON_VALID_SIZE_CHECK(buf_len, current, static_cast<uint8_t>(type_size))
 
 class Document {
-  typedef DocumentIter iterator;
+  typedef DocumentIter<DocumentElement> iterator;
   typedef std::ptrdiff_t difference_type;
   typedef size_t size_type;
   typedef DocumentElement value_type;
   typedef DocumentElement *pointer;
   typedef DocumentElement &reference;
-  friend class DocumentIter;
+  template <class Element> friend class ArrayIter;
+  template <class Element> friend class DocumentIter;
 
+  friend class ArrayElement;
   friend class DocumentElement;
 
 public:
@@ -45,7 +49,7 @@ public:
   iterator begin() const;
   iterator end() const;
 
-private:
+protected:
   const uint8_t *buffer_;
   const size_t offset_;
   const size_t buffer_length_;
