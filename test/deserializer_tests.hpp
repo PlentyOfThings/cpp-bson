@@ -224,7 +224,7 @@ public:
                 int nniters = 0;
                 bool nnbrk = false;
                 for (auto const &nnel : nnested) {
-                  switch (niters) {
+                  switch (nniters) {
                     case 0: {
                       TS_ASSERT_EQUALS(nnel.type(), pot::bson::Element::String);
                       TS_ASSERT(nnel.nameEquals("a"));
