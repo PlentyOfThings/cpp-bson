@@ -3,7 +3,7 @@
 
 namespace bsond = pot::bson::deserializer;
 
-class DeserializerComplexTests : public CxxTest::TestSuite {
+class DeserializerComplexIteratorTests : public CxxTest::TestSuite {
 public:
   void testNestedArr() {
     uint8_t buf[] = {

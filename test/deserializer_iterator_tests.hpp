@@ -3,7 +3,7 @@
 
 namespace bsond = pot::bson::deserializer;
 
-class DeserializerTests : public CxxTest::TestSuite {
+class DeserializerIteratorTests : public CxxTest::TestSuite {
 public:
   void testEmptyDocument() {
     uint8_t buf[] = { 0x05, 0x00, 0x00, 0x00, 0x00 };
