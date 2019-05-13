@@ -74,6 +74,10 @@ bool Array::containsDouble(const double value, const double epsilon) const {
   return false;
 }
 
+bool Array::containsDouble(const double value) const {
+  return containsDouble(value, std::numeric_limits<double>::epsilon());
+}
+
 bool Array::containsStr(const char str[]) const {
   for (auto const &el : *this) {
     if (el.type() == Element::String && el.strEquals(str)) {
@@ -122,6 +126,34 @@ bool Array::containsInt64(const int64_t value) const {
   }
 
   return false;
+}
+
+bool Array::containsInt(const int64_t value) const {
+  for (auto const &el : *this) {
+    if ((el.type() == Element::Int64 && el.getInt64() == value) ||
+        (el.type() == Element::Int32 && el.getInt32() == value)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool Array::containsNumber(const double value, const double epsilon) const {
+  for (auto const &el : *this) {
+    if ((el.type() == Element::Int64 && el.getInt64() == value) ||
+        (el.type() == Element::Int32 && el.getInt32() == value) ||
+        (el.type() == Element::Double &&
+         fabs(el.getDouble() - value) < epsilon)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool Array::containsNumber(const double value) const {
+  return containsNumber(value, std::numeric_limits<double>::epsilon());
 }
 
 } // namespace deserializer

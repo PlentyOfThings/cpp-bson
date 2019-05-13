@@ -32,11 +32,15 @@ public:
   std::shared_ptr<ArrayElement> getElByName(const char index[]) const;
   std::shared_ptr<ArrayElement> getElByIndex(const size_t index) const;
   bool containsDouble(const double value, const double epsilon) const;
+  bool containsDouble(const double value) const;
   bool containsStr(const char str[]) const;
   bool containsBool(const bool value) const;
   bool containsNull() const;
   bool containsInt32(const int32_t value) const;
   bool containsInt64(const int64_t value) const;
+  bool containsInt(const int64_t value) const;
+  bool containsNumber(const double value, const double epsilon) const;
+  bool containsNumber(const double value) const;
 
 protected:
   Array(const uint8_t buf[], const size_t len, const size_t offset) :

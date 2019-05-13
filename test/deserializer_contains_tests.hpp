@@ -43,8 +43,8 @@ public:
     auto arr = doc.getElByName("arr");
     TS_ASSERT(arr);
     TS_ASSERT_EQUALS(arr->type(), pot::bson::Element::Array);
-    TS_ASSERT_EQUALS(arr->getArr().containsDouble(0.2, 0.0001), true);
-    TS_ASSERT_EQUALS(arr->getArr().containsDouble(0.16, 0.0001), false);
+    TS_ASSERT_EQUALS(arr->getArr().containsDouble(0.2), true);
+    TS_ASSERT_EQUALS(arr->getArr().containsDouble(0.16), false);
   }
 
   void testStr() {
@@ -130,5 +130,39 @@ public:
     TS_ASSERT_EQUALS(arr->type(), pot::bson::Element::Array);
     TS_ASSERT_EQUALS(arr->getArr().containsInt64(10), true);
     TS_ASSERT_EQUALS(arr->getArr().containsInt64(15), false);
+  }
+
+  void testInt() {
+    uint8_t buf[] = {
+      0x21, 0x00, 0x00, 0x00, 0x04, 0x61, 0x72, 0x72, 0x00, 0x17, 0x00,
+      0x00, 0x00, 0x12, 0x30, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x10, 0x31, 0x00, 0x0B, 0x00, 0x00, 0x00, 0x00, 0x00,
+    };
+    bsond::Document doc(buf, sizeof(buf));
+
+    auto arr = doc.getElByName("arr");
+    TS_ASSERT(arr);
+    TS_ASSERT_EQUALS(arr->type(), pot::bson::Element::Array);
+    TS_ASSERT_EQUALS(arr->getArr().containsInt(10), true);
+    TS_ASSERT_EQUALS(arr->getArr().containsInt(11), true);
+    TS_ASSERT_EQUALS(arr->getArr().containsInt(15), false);
+  }
+
+  void testNumber() {
+    uint8_t buf[] = {
+      0x2C, 0x00, 0x00, 0x00, 0x04, 0x61, 0x72, 0x72, 0x00, 0x22, 0x00,
+      0x00, 0x00, 0x12, 0x30, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x10, 0x31, 0x00, 0x0B, 0x00, 0x00, 0x00, 0x01, 0x32,
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x29, 0x40, 0x00, 0x00,
+    };
+    bsond::Document doc(buf, sizeof(buf));
+
+    auto arr = doc.getElByName("arr");
+    TS_ASSERT(arr);
+    TS_ASSERT_EQUALS(arr->type(), pot::bson::Element::Array);
+    TS_ASSERT_EQUALS(arr->getArr().containsNumber(10), true);
+    TS_ASSERT_EQUALS(arr->getArr().containsNumber(11), true);
+    TS_ASSERT_EQUALS(arr->getArr().containsNumber(12.5), true);
+    TS_ASSERT_EQUALS(arr->getArr().containsNumber(15), false);
   }
 };
