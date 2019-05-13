@@ -6,6 +6,7 @@
 #include "./array_element.hpp"
 #include "./document_element.hpp"
 #include <cstdlib>
+#include <memory>
 
 namespace pot {
 namespace bson {
