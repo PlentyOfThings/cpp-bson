@@ -23,6 +23,11 @@ template <class Element> class DocumentIter;
 #define __POT_BSON_VALID_TYPESIZE_CHECK(buf_len, current, type_size) \
   __POT_BSON_VALID_SIZE_CHECK(buf_len, current, static_cast<uint8_t>(type_size))
 
+struct GetElementResult {
+  bool found;
+  DocumentElement element;
+};
+
 class Document {
   typedef DocumentIter<DocumentElement> iterator;
   typedef std::ptrdiff_t difference_type;
@@ -48,6 +53,7 @@ public:
   // Implemented in document_iter.hpp
   iterator begin() const;
   iterator end() const;
+  std::shared_ptr<DocumentElement> getElByName(const char name[]) const;
 
 protected:
   const uint8_t *buffer_;

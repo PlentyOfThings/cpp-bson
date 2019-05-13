@@ -55,6 +55,17 @@ Document::iterator Document::end() const {
   return Document::iterator(*this, this->offset_ + this->len() - 1);
 }
 
+std::shared_ptr<DocumentElement>
+Document::getElByName(const char name[]) const {
+  for (auto const &el : *this) {
+    if (el.nameEquals(name)) {
+      return std::shared_ptr<DocumentElement>(new DocumentElement(el));
+    }
+  }
+
+  return nullptr;
+}
+
 } // namespace deserializer
 } // namespace bson
 } // namespace pot
