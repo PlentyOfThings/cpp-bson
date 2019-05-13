@@ -130,8 +130,9 @@ bool Array::containsInt64(const int64_t value) const {
 
 bool Array::containsInt(const int64_t value) const {
   for (auto const &el : *this) {
-    if ((el.type() == Element::Int64 && el.getInt64() == value) ||
-        (el.type() == Element::Int32 && el.getInt32() == value)) {
+    auto type = el.type();
+    if ((type == Element::Int64 && el.getInt64() == value) ||
+        (type == Element::Int32 && el.getInt32() == value)) {
       return true;
     }
   }
@@ -141,10 +142,10 @@ bool Array::containsInt(const int64_t value) const {
 
 bool Array::containsNumber(const double value, const double epsilon) const {
   for (auto const &el : *this) {
-    if ((el.type() == Element::Int64 && el.getInt64() == value) ||
-        (el.type() == Element::Int32 && el.getInt32() == value) ||
-        (el.type() == Element::Double &&
-         fabs(el.getDouble() - value) < epsilon)) {
+    auto type = el.type();
+    if ((type == Element::Int64 && el.getInt64() == value) ||
+        (type == Element::Int32 && el.getInt32() == value) ||
+        (type == Element::Double && fabs(el.getDouble() - value) < epsilon)) {
       return true;
     }
   }
