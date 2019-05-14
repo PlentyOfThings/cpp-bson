@@ -66,22 +66,22 @@ public:
       buffer_(buf), start_(start), buffer_length_(len) {}
 
   Element type() const {
-    return static_cast<Element>(buffer_[start_]);
+    return static_cast<Element>(this->buffer_[this->start_]);
   }
 
   int getName(char str[], const size_t len) const {
-    return copy_string_to(buffer_, str, __POT_BSON_DOCUMENT_ELEMENT_NAME_OFFSET,
-                          len);
+    return copy_string_to(this->buffer_, str,
+                          __POT_BSON_DOCUMENT_ELEMENT_NAME_OFFSET, len);
   }
 
   bool nameEquals(const char str[]) const {
-    return is_string_equal(buffer_, str,
+    return is_string_equal(this->buffer_, str,
                            __POT_BSON_DOCUMENT_ELEMENT_NAME_OFFSET);
   }
 
   double getDouble() const {
     return endian::buffer_to_primitive<double, TypeSize::Double>(
-        buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
+        this->buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
   }
 
   double getNumber() const {
@@ -96,12 +96,12 @@ public:
   }
 
   int getStr(char str[], const size_t len) const {
-    return copy_string_to(buffer_, str,
+    return copy_string_to(this->buffer_, str,
                           __POT_BSON_DOCUMENT_ELEMENT_DATA_LEN_OFFSET, len);
   }
 
   bool strEquals(const char str[]) const {
-    return is_string_equal(buffer_, str,
+    return is_string_equal(this->buffer_, str,
                            __POT_BSON_DOCUMENT_ELEMENT_DATA_LEN_OFFSET);
   }
 
@@ -118,26 +118,26 @@ public:
     size_t copy_len = bin_len < len ? bin_len : len;
 
     for (size_t i = 0; i < copy_len; i++) {
-      buf[i] = buffer_[offset + i];
+      buf[i] = this->buffer_[offset + i];
     }
 
     return copy_len;
   }
 
   bool getBool() const {
-    uint8_t val = buffer_[__POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET];
+    uint8_t val = this->buffer_[__POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET];
 
     return val == static_cast<uint8_t>(BooleanElementValue::True);
   }
 
   int32_t getInt32() const {
     return endian::buffer_to_primitive<int32_t, TypeSize::Int32>(
-        buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
+        this->buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
   }
 
   int64_t getInt64() const {
     return endian::buffer_to_primitive<int64_t, TypeSize::Int64>(
-        buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
+        this->buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
   }
 
   int64_t getInt() const {
@@ -149,24 +149,24 @@ public:
   }
 
   size_t nameSize() const {
-    if (name_size_ > 0) {
-      return name_size_;
+    if (this->name_size_ > 0) {
+      return this->name_size_;
     }
 
     size_t sz = 0;
 
     char chr;
     do {
-      chr = buffer_[start_ + sz + 1];
+      chr = this->buffer_[this->start_ + sz + 1];
       sz++;
     } while (chr != '\0');
 
-    name_size_ = sz;
+    this->name_size_ = sz;
     return sz;
   }
 
   size_t dataSize() const {
-    Element tp = type();
+    Element tp = this->type();
     switch (tp) {
       case Element::Double: {
         return static_cast<uint8_t>(TypeSize::Double);
@@ -176,7 +176,7 @@ public:
       case Element::Array:
       case Element::Binary: {
         // Get the size of the data.
-        int32_t sz = getDataLen();
+        int32_t sz = this->getDataLen();
 
         // Documents and arrays have the length bytes accounted for in the
         // main data length value.
@@ -217,7 +217,7 @@ private:
 
   int32_t getDataLen() const {
     return endian::buffer_to_primitive<int32_t, TypeSize::Int32>(
-        buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
+        this->buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
   }
 };
 

@@ -22,55 +22,55 @@ public:
   void operator=(const Array &) = delete;
 
   Array &appendDouble(double value) {
-    Document::appendDouble(index_++, value);
+    this->Document::appendDouble(this->index_++, value);
 
     return *this;
   }
 
   Array &appendStr(const char str[]) {
-    Document::appendStr(index_++, str);
+    this->Document::appendStr(this->index_++, str);
 
     return *this;
   }
 
   Array &appendDoc(std::function<void(Document &)> builder) {
-    Document::appendDoc(index_++, builder);
+    this->Document::appendDoc(this->index_++, builder);
 
     return *this;
   }
 
   Array &appendArr(std::function<void(Array &)> builder) {
-    Document::appendArr(index_++, builder);
+    this->Document::appendArr(this->index_++, builder);
 
     return *this;
   }
 
   Array &appendBinary(const uint8_t buf[], size_t len) {
-    Document::appendBinary(index_++, buf, len);
+    this->Document::appendBinary(this->index_++, buf, len);
 
     return *this;
   }
 
   Array &appendBool(bool value) {
-    Document::appendBool(index_++, value);
+    this->Document::appendBool(this->index_++, value);
 
     return *this;
   }
 
   Array &appendNull() {
-    Document::appendNull(index_++);
+    this->Document::appendNull(this->index_++);
 
     return *this;
   }
 
   Array &appendInt32(int32_t value) {
-    Document::appendInt32(index_++, value);
+    this->Document::appendInt32(this->index_++, value);
 
     return *this;
   }
 
   Array &appendInt64(int64_t value) {
-    Document::appendInt64(index_++, value);
+    this->Document::appendInt64(this->index_++, value);
 
     return *this;
   }
@@ -80,8 +80,8 @@ public:
   }
 
   int handleIndex(char key[]) {
-    int ret = convert_int_key_to_str(index_, key);
-    index_++;
+    int ret = convert_int_key_to_str(this->index_, key);
+    this->index_++;
     return ret;
   }
 

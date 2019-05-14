@@ -19,7 +19,7 @@ public:
       index_(index) {}
 
   size_t getIndex() const {
-    return index_;
+    return this->index_;
   }
 
 private:

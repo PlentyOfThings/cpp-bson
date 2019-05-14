@@ -19,14 +19,13 @@ public:
       DocumentIter<Element>(doc, current) {}
 
   virtual Element operator*() const {
-    return { DocumentIter<Element>::doc_.buffer_,
-             DocumentIter<Element>::current_,
-             DocumentIter<Element>::doc_.buffer_length_, index_ };
+    return { this->doc_.buffer_, this->current_, this->doc_.buffer_length_,
+             index_ };
   }
 
   virtual ArrayIter &operator++() {
     index_++;
-    DocumentIter<Element>::operator++();
+    this->DocumentIter<Element>::operator++();
     return *this;
   }
 
@@ -75,7 +74,7 @@ bool Array::containsDouble(const double value, const double epsilon) const {
 }
 
 bool Array::containsDouble(const double value) const {
-  return containsDouble(value, std::numeric_limits<double>::epsilon());
+  return this->containsDouble(value, std::numeric_limits<double>::epsilon());
 }
 
 bool Array::containsStr(const char str[]) const {
@@ -154,7 +153,7 @@ bool Array::containsNumber(const double value, const double epsilon) const {
 }
 
 bool Array::containsNumber(const double value) const {
-  return containsNumber(value, std::numeric_limits<double>::epsilon());
+  return this->containsNumber(value, std::numeric_limits<double>::epsilon());
 }
 
 } // namespace deserializer

@@ -66,8 +66,8 @@ protected:
       buffer_(buf), offset_(offset), buffer_length_(len) {}
 
   int32_t len() const {
-    return endian::buffer_to_primitive<int32_t, TypeSize::Int32>(buffer_,
-                                                                 offset_);
+    return endian::buffer_to_primitive<int32_t, TypeSize::Int32>(this->buffer_,
+                                                                 this->offset_);
   }
 
   template <size_t elm_name_buf_size>
@@ -75,9 +75,10 @@ protected:
     size_t start = current;
 
     // Handle document size.
-    __POT_BSON_VALID_TYPESIZE_CHECK(buffer_length_, current, TypeSize::Int32)
-    int32_t doc_size =
-        endian::buffer_to_primitive<int32_t, TypeSize::Int32>(buffer_, current);
+    __POT_BSON_VALID_TYPESIZE_CHECK(this->buffer_length_, current,
+                                    TypeSize::Int32)
+    int32_t doc_size = endian::buffer_to_primitive<int32_t, TypeSize::Int32>(
+        this->buffer_, current);
     current += static_cast<uint8_t>(TypeSize::Int32);
 
     uint8_t element_type;
@@ -86,8 +87,9 @@ protected:
     char element_index_str[kIntKeySize];
     while (true) {
       // Handle element type byte.
-      __POT_BSON_VALID_TYPESIZE_CHECK(buffer_length_, current, TypeSize::Byte)
-      element_type = buffer_[current];
+      __POT_BSON_VALID_TYPESIZE_CHECK(this->buffer_length_, current,
+                                      TypeSize::Byte)
+      element_type = this->buffer_[current];
       current += static_cast<uint8_t>(TypeSize::Byte);
 
       // A terminator means we've hit the end of the document.
@@ -99,8 +101,9 @@ protected:
       size_t current_element_name_chr = 0;
       char name_chr;
       do {
-        __POT_BSON_VALID_TYPESIZE_CHECK(buffer_length_, current, TypeSize::Byte)
-        name_chr = buffer_[current];
+        __POT_BSON_VALID_TYPESIZE_CHECK(this->buffer_length_, current,
+                                        TypeSize::Byte)
+        name_chr = this->buffer_[current];
         current += static_cast<uint8_t>(TypeSize::Byte);
 
         if (current_element_name_chr < elm_name_buf_size) {
@@ -125,7 +128,7 @@ protected:
       switch (element_type) {
         case static_cast<uint8_t>(Element::Double): {
           // Handle double element.
-          __POT_BSON_VALID_TYPESIZE_CHECK(buffer_length_, current,
+          __POT_BSON_VALID_TYPESIZE_CHECK(this->buffer_length_, current,
                                           TypeSize::Double)
           current += static_cast<uint8_t>(TypeSize::Double);
           break;
@@ -136,14 +139,14 @@ protected:
           // so we _only_ use the size for validation.
           // We also have to account for the final null terminator
           // (although it doesn't help us at all).
-          __POT_BSON_VALID_TYPESIZE_CHECK(buffer_length_, current,
+          __POT_BSON_VALID_TYPESIZE_CHECK(this->buffer_length_, current,
                                           TypeSize::Int32)
           int32_t str_len =
-              endian::buffer_to_primitive<int32_t, TypeSize::Int32>(buffer_,
-                                                                    current);
+              endian::buffer_to_primitive<int32_t, TypeSize::Int32>(
+                  this->buffer_, current);
           current += static_cast<uint8_t>(TypeSize::Int32);
 
-          __POT_BSON_VALID_SIZE_CHECK(buffer_length_, current, str_len);
+          __POT_BSON_VALID_SIZE_CHECK(this->buffer_length_, current, str_len);
           // Size includes null terminator.
           if (buffer_[current + str_len - 1] != '\0') {
             return false;
@@ -169,31 +172,31 @@ protected:
         }
         case static_cast<uint8_t>(Element::Binary): {
           // Handle binary element.
-          __POT_BSON_VALID_TYPESIZE_CHECK(buffer_length_, current,
+          __POT_BSON_VALID_TYPESIZE_CHECK(this->buffer_length_, current,
                                           TypeSize::Int32);
           int32_t bin_len =
-              endian::buffer_to_primitive<int32_t, TypeSize::Int32>(buffer_,
-                                                                    current);
+              endian::buffer_to_primitive<int32_t, TypeSize::Int32>(
+                  this->buffer_, current);
           current += static_cast<uint8_t>(TypeSize::Int32);
 
           // We only support generic binary types right now.
-          __POT_BSON_VALID_TYPESIZE_CHECK(buffer_length_, current,
+          __POT_BSON_VALID_TYPESIZE_CHECK(this->buffer_length_, current,
                                           TypeSize::Byte);
-          if (buffer_[current] !=
+          if (this->buffer_[current] !=
               static_cast<uint8_t>(BinaryElementSubtype::Generic)) {
             return false;
           }
           current += static_cast<uint8_t>(TypeSize::Byte);
 
-          __POT_BSON_VALID_SIZE_CHECK(buffer_length_, current, bin_len)
+          __POT_BSON_VALID_SIZE_CHECK(this->buffer_length_, current, bin_len)
           current += bin_len;
           break;
         }
         case static_cast<uint8_t>(Element::Boolean): {
           // Handle boolean element.
-          __POT_BSON_VALID_TYPESIZE_CHECK(buffer_length_, current,
+          __POT_BSON_VALID_TYPESIZE_CHECK(this->buffer_length_, current,
                                           TypeSize::Byte);
-          uint8_t bool_val = buffer_[current];
+          uint8_t bool_val = this->buffer_[current];
           current += static_cast<uint8_t>(TypeSize::Byte);
 
           if (bool_val != static_cast<uint8_t>(BooleanElementValue::True) &&
@@ -207,14 +210,14 @@ protected:
           break;
         case static_cast<uint8_t>(Element::Int32): {
           // Handle int32 element.
-          __POT_BSON_VALID_TYPESIZE_CHECK(buffer_length_, current,
+          __POT_BSON_VALID_TYPESIZE_CHECK(this->buffer_length_, current,
                                           TypeSize::Int32)
           current += static_cast<uint8_t>(TypeSize::Int32);
           break;
         }
         case static_cast<uint8_t>(Element::Int64): {
           // Handle int64 element.
-          __POT_BSON_VALID_TYPESIZE_CHECK(buffer_length_, current,
+          __POT_BSON_VALID_TYPESIZE_CHECK(this->buffer_length_, current,
                                           TypeSize::Int64)
           current += static_cast<uint8_t>(TypeSize::Int64);
           break;

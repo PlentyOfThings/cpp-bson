@@ -12,14 +12,14 @@ namespace deserializer {
 template <class Element> class DocumentIter {
 public:
   DocumentIter(const Document &doc) : doc_(doc) {
-    current_ = doc.offset_ + static_cast<uint8_t>(TypeSize::Int32);
+    this->current_ = doc.offset_ + static_cast<uint8_t>(TypeSize::Int32);
   }
 
   DocumentIter(const Document &doc, size_t current) :
       doc_(doc), current_(current) {}
 
   bool operator==(DocumentIter &other) const {
-    return &doc_ == &other.doc_ && current_ == other.current_;
+    return &this->doc_ == &other.doc_ && this->current_ == other.current_;
   }
 
   bool operator!=(DocumentIter &other) const {
@@ -27,7 +27,7 @@ public:
   }
 
   virtual Element operator*() const {
-    return { doc_.buffer_, current_, doc_.buffer_length_ };
+    return { this->doc_.buffer_, this->current_, this->doc_.buffer_length_ };
   }
 
   virtual DocumentIter &operator++() {
