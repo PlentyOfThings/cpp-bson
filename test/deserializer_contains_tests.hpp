@@ -5,32 +5,6 @@ namespace bsond = pot::bson::deserializer;
 
 class DeserializerContainsTests : public CxxTest::TestSuite {
 public:
-  void testGetElement() {
-    uint8_t buf[] = {
-      0x16, 0x00, 0x00, 0x00, 0x04, 0x61, 0x72, 0x72, 0x00, 0x0C, 0x00,
-      0x00, 0x00, 0x10, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    };
-    bsond::Document doc(buf, sizeof(buf));
-
-    auto arrEl = doc.getElByName("arr");
-    TS_ASSERT(arrEl);
-
-    TS_ASSERT_EQUALS(arrEl->type(), pot::bson::Element::Array);
-    auto arr = arrEl->getArr();
-
-    auto first = arr.getElByIndex(0);
-    TS_ASSERT(first);
-    TS_ASSERT_EQUALS(first->type(), pot::bson::Element::Int32);
-
-    auto firstByStr = arr.getElByName("0");
-    TS_ASSERT(firstByStr);
-    TS_ASSERT_EQUALS(firstByStr->type(), pot::bson::Element::Int32);
-    TS_ASSERT_EQUALS(first->getInt32(), firstByStr->getInt32());
-
-    auto missing = doc.getElByName("missing");
-    TS_ASSERT(!missing);
-  }
-
   void testDouble() {
     uint8_t buf[] = {
       0x30, 0x00, 0x00, 0x00, 0x04, 0x61, 0x72, 0x72, 0x00, 0x26, 0x00, 0x00,

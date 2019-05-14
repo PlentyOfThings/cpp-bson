@@ -84,6 +84,17 @@ public:
         buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
   }
 
+  double getNumber() {
+    auto type = this->type();
+    if (type == Element::Int32) {
+      return getInt32();
+    } else if (type == Element::Int64) {
+      return getInt64();
+    } else {
+      return getDouble();
+    }
+  }
+
   int getStr(char str[], const size_t len) const {
     return copy_string_to(buffer_, str,
                           __POT_BSON_DOCUMENT_ELEMENT_DATA_LEN_OFFSET, len);
@@ -127,6 +138,14 @@ public:
   int64_t getInt64() const {
     return endian::buffer_to_primitive<int64_t, TypeSize::Int64>(
         buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
+  }
+
+  int64_t getInt() {
+    if (type() == Element::Int32) {
+      return getInt32();
+    } else {
+      return getInt64();
+    }
   }
 
   size_t nameSize() const {
