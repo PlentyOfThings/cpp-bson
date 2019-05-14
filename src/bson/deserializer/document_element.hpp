@@ -84,7 +84,7 @@ public:
         buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
   }
 
-  double getNumber() {
+  double getNumber() const {
     auto type = this->type();
     if (type == Element::Int32) {
       return getInt32();
@@ -140,7 +140,7 @@ public:
         buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
   }
 
-  int64_t getInt() {
+  int64_t getInt() const {
     if (type() == Element::Int32) {
       return getInt32();
     } else {
