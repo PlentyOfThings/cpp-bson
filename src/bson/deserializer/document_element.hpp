@@ -69,6 +69,17 @@ public:
     return static_cast<Element>(this->buffer_[this->start_]);
   }
 
+  bool isNumber() const {
+    auto type = this->type();
+    return type == Element::Int32 || type == Element::Int64 ||
+           type == Element::Double;
+  }
+
+  bool isInt() const {
+    auto type = this->type();
+    return type == Element::Int32 || type == Element::Int64;
+  }
+
   int getName(char str[], const size_t len) const {
     return copy_string_to(this->buffer_, str,
                           __POT_BSON_DOCUMENT_ELEMENT_NAME_OFFSET, len);

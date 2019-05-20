@@ -43,14 +43,20 @@ public:
     auto dbl = doc.getElByName("dbl");
     TS_ASSERT(dbl);
     TS_ASSERT_EQUALS(dbl->getNumber(), 0.2);
+    TS_ASSERT_EQUALS(dbl->isNumber(), true);
+    TS_ASSERT_EQUALS(dbl->isInt(), false);
 
     auto i32 = doc.getElByName("32");
     TS_ASSERT(i32);
     TS_ASSERT_EQUALS(i32->getNumber(), 32);
+    TS_ASSERT_EQUALS(i32->isNumber(), true);
+    TS_ASSERT_EQUALS(i32->isInt(), true);
 
     auto i64 = doc.getElByName("64");
     TS_ASSERT(i64);
     TS_ASSERT_EQUALS(i64->getNumber(), 64);
+    TS_ASSERT_EQUALS(i32->isNumber(), true);
+    TS_ASSERT_EQUALS(i32->isInt(), true);
   }
 
   void testGetInt() {
