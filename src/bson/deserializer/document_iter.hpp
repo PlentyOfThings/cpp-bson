@@ -59,7 +59,7 @@ std::shared_ptr<DocumentElement>
 Document::getElByName(const char name[]) const {
   for (auto const &el : *this) {
     if (el.nameEquals(name)) {
-      return std::shared_ptr<DocumentElement>(new DocumentElement(el));
+      return std::make_shared<DocumentElement>(el);
     }
   }
 

@@ -45,7 +45,7 @@ Array::iterator Array::end() const {
 std::shared_ptr<ArrayElement> Array::getElByName(const char index[]) const {
   for (auto const &el : *this) {
     if (el.nameEquals(index)) {
-      return std::shared_ptr<ArrayElement>(new ArrayElement(el));
+      return std::make_shared<ArrayElement>(el);
     }
   }
 
@@ -55,7 +55,7 @@ std::shared_ptr<ArrayElement> Array::getElByName(const char index[]) const {
 std::shared_ptr<ArrayElement> Array::getElByIndex(const size_t index) const {
   for (auto const &el : *this) {
     if (el.getIndex() == index) {
-      return std::shared_ptr<ArrayElement>(new ArrayElement(el));
+      return std::make_shared<ArrayElement>(el);
     }
   }
 
