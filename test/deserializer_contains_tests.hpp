@@ -14,11 +14,11 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    auto arr = doc.getElByName("arr");
-    TS_ASSERT(arr);
-    TS_ASSERT_EQUALS(arr->type(), pot::bson::Element::Array);
-    TS_ASSERT_EQUALS(arr->getArr().containsDouble(0.2), true);
-    TS_ASSERT_EQUALS(arr->getArr().containsDouble(0.16), false);
+    bsond::DocumentElement arr;
+    TS_ASSERT(doc.getElByName("arr", arr));
+    TS_ASSERT_EQUALS(arr.type(), pot::bson::Element::Array);
+    TS_ASSERT_EQUALS(arr.getArr().containsDouble(0.2), true);
+    TS_ASSERT_EQUALS(arr.getArr().containsDouble(0.16), false);
   }
 
   void testStr() {
@@ -29,11 +29,11 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    auto arr = doc.getElByName("arr");
-    TS_ASSERT(arr);
-    TS_ASSERT_EQUALS(arr->type(), pot::bson::Element::Array);
-    TS_ASSERT_EQUALS(arr->getArr().containsStr("exists"), true);
-    TS_ASSERT_EQUALS(arr->getArr().containsStr("missing"), false);
+    bsond::DocumentElement arr;
+    TS_ASSERT(doc.getElByName("arr", arr));
+    TS_ASSERT_EQUALS(arr.type(), pot::bson::Element::Array);
+    TS_ASSERT_EQUALS(arr.getArr().containsStr("exists"), true);
+    TS_ASSERT_EQUALS(arr.getArr().containsStr("missing"), false);
   }
 
   void testBool() {
@@ -43,11 +43,11 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    auto arr = doc.getElByName("arr");
-    TS_ASSERT(arr);
-    TS_ASSERT_EQUALS(arr->type(), pot::bson::Element::Array);
-    TS_ASSERT_EQUALS(arr->getArr().containsBool(true), true);
-    TS_ASSERT_EQUALS(arr->getArr().containsBool(false), false);
+    bsond::DocumentElement arr;
+    TS_ASSERT(doc.getElByName("arr", arr));
+    TS_ASSERT_EQUALS(arr.type(), pot::bson::Element::Array);
+    TS_ASSERT_EQUALS(arr.getArr().containsBool(true), true);
+    TS_ASSERT_EQUALS(arr.getArr().containsBool(false), false);
   }
 
   void testNullExists() {
@@ -58,10 +58,10 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    auto arr = doc.getElByName("arr");
-    TS_ASSERT(arr);
-    TS_ASSERT_EQUALS(arr->type(), pot::bson::Element::Array);
-    TS_ASSERT_EQUALS(arr->getArr().containsNull(), true);
+    bsond::DocumentElement arr;
+    TS_ASSERT(doc.getElByName("arr", arr));
+    TS_ASSERT_EQUALS(arr.type(), pot::bson::Element::Array);
+    TS_ASSERT_EQUALS(arr.getArr().containsNull(), true);
   }
 
   void testNullMissing() {
@@ -71,10 +71,10 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    auto arr = doc.getElByName("arr");
-    TS_ASSERT(arr);
-    TS_ASSERT_EQUALS(arr->type(), pot::bson::Element::Array);
-    TS_ASSERT_EQUALS(arr->getArr().containsNull(), false);
+    bsond::DocumentElement arr;
+    TS_ASSERT(doc.getElByName("arr", arr));
+    TS_ASSERT_EQUALS(arr.type(), pot::bson::Element::Array);
+    TS_ASSERT_EQUALS(arr.getArr().containsNull(), false);
   }
 
   void testInt32() {
@@ -84,11 +84,11 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    auto arr = doc.getElByName("arr");
-    TS_ASSERT(arr);
-    TS_ASSERT_EQUALS(arr->type(), pot::bson::Element::Array);
-    TS_ASSERT_EQUALS(arr->getArr().containsInt32(10), true);
-    TS_ASSERT_EQUALS(arr->getArr().containsInt32(15), false);
+    bsond::DocumentElement arr;
+    TS_ASSERT(doc.getElByName("arr", arr));
+    TS_ASSERT_EQUALS(arr.type(), pot::bson::Element::Array);
+    TS_ASSERT_EQUALS(arr.getArr().containsInt32(10), true);
+    TS_ASSERT_EQUALS(arr.getArr().containsInt32(15), false);
   }
 
   void testInt64() {
@@ -99,11 +99,11 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    auto arr = doc.getElByName("arr");
-    TS_ASSERT(arr);
-    TS_ASSERT_EQUALS(arr->type(), pot::bson::Element::Array);
-    TS_ASSERT_EQUALS(arr->getArr().containsInt64(10), true);
-    TS_ASSERT_EQUALS(arr->getArr().containsInt64(15), false);
+    bsond::DocumentElement arr;
+    TS_ASSERT(doc.getElByName("arr", arr));
+    TS_ASSERT_EQUALS(arr.type(), pot::bson::Element::Array);
+    TS_ASSERT_EQUALS(arr.getArr().containsInt64(10), true);
+    TS_ASSERT_EQUALS(arr.getArr().containsInt64(15), false);
   }
 
   void testInt() {
@@ -114,12 +114,12 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    auto arr = doc.getElByName("arr");
-    TS_ASSERT(arr);
-    TS_ASSERT_EQUALS(arr->type(), pot::bson::Element::Array);
-    TS_ASSERT_EQUALS(arr->getArr().containsInt(10), true);
-    TS_ASSERT_EQUALS(arr->getArr().containsInt(11), true);
-    TS_ASSERT_EQUALS(arr->getArr().containsInt(15), false);
+    bsond::DocumentElement arr;
+    TS_ASSERT(doc.getElByName("arr", arr));
+    TS_ASSERT_EQUALS(arr.type(), pot::bson::Element::Array);
+    TS_ASSERT_EQUALS(arr.getArr().containsInt(10), true);
+    TS_ASSERT_EQUALS(arr.getArr().containsInt(11), true);
+    TS_ASSERT_EQUALS(arr.getArr().containsInt(15), false);
   }
 
   void testNumber() {
@@ -131,12 +131,12 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    auto arr = doc.getElByName("arr");
-    TS_ASSERT(arr);
-    TS_ASSERT_EQUALS(arr->type(), pot::bson::Element::Array);
-    TS_ASSERT_EQUALS(arr->getArr().containsNumber(10), true);
-    TS_ASSERT_EQUALS(arr->getArr().containsNumber(11), true);
-    TS_ASSERT_EQUALS(arr->getArr().containsNumber(12.5), true);
-    TS_ASSERT_EQUALS(arr->getArr().containsNumber(15), false);
+    bsond::DocumentElement arr;
+    TS_ASSERT(doc.getElByName("arr", arr));
+    TS_ASSERT_EQUALS(arr.type(), pot::bson::Element::Array);
+    TS_ASSERT_EQUALS(arr.getArr().containsNumber(10), true);
+    TS_ASSERT_EQUALS(arr.getArr().containsNumber(11), true);
+    TS_ASSERT_EQUALS(arr.getArr().containsNumber(12.5), true);
+    TS_ASSERT_EQUALS(arr.getArr().containsNumber(15), false);
   }
 };

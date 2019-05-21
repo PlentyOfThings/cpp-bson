@@ -12,23 +12,23 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    auto arrEl = doc.getElByName("arr");
-    TS_ASSERT(arrEl);
+    bsond::DocumentElement arrEl;
+    TS_ASSERT(doc.getElByName("arr", arrEl));
 
-    TS_ASSERT_EQUALS(arrEl->type(), pot::bson::Element::Array);
-    auto arr = arrEl->getArr();
+    TS_ASSERT_EQUALS(arrEl.type(), pot::bson::Element::Array);
+    auto arr = arrEl.getArr();
 
-    auto first = arr.getElByIndex(0);
-    TS_ASSERT(first);
-    TS_ASSERT_EQUALS(first->type(), pot::bson::Element::Int32);
+    bsond::ArrayElement first;
+    TS_ASSERT(arr.getElByIndex(0, first));
+    TS_ASSERT_EQUALS(first.type(), pot::bson::Element::Int32);
 
-    auto firstByStr = arr.getElByName("0");
-    TS_ASSERT(firstByStr);
-    TS_ASSERT_EQUALS(firstByStr->type(), pot::bson::Element::Int32);
-    TS_ASSERT_EQUALS(first->getInt32(), firstByStr->getInt32());
+    bsond::ArrayElement firstByStr;
+    TS_ASSERT(arr.getElByName("0", firstByStr));
+    TS_ASSERT_EQUALS(firstByStr.type(), pot::bson::Element::Int32);
+    TS_ASSERT_EQUALS(first.getInt32(), firstByStr.getInt32());
 
-    auto missing = doc.getElByName("missing");
-    TS_ASSERT(!missing);
+    bsond::DocumentElement missing;
+    TS_ASSERT(!doc.getElByName("missing", missing));
   }
 
   void testGetNumber() {
@@ -40,23 +40,23 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    auto dbl = doc.getElByName("dbl");
-    TS_ASSERT(dbl);
-    TS_ASSERT_EQUALS(dbl->getNumber(), 0.2);
-    TS_ASSERT_EQUALS(dbl->isNumber(), true);
-    TS_ASSERT_EQUALS(dbl->isInt(), false);
+    bsond::DocumentElement dbl;
+    TS_ASSERT(doc.getElByName("dbl", dbl));
+    TS_ASSERT_EQUALS(dbl.getNumber(), 0.2);
+    TS_ASSERT_EQUALS(dbl.isNumber(), true);
+    TS_ASSERT_EQUALS(dbl.isInt(), false);
 
-    auto i32 = doc.getElByName("32");
-    TS_ASSERT(i32);
-    TS_ASSERT_EQUALS(i32->getNumber(), 32);
-    TS_ASSERT_EQUALS(i32->isNumber(), true);
-    TS_ASSERT_EQUALS(i32->isInt(), true);
+    bsond::DocumentElement i32;
+    TS_ASSERT(doc.getElByName("32", i32));
+    TS_ASSERT_EQUALS(i32.getNumber(), 32);
+    TS_ASSERT_EQUALS(i32.isNumber(), true);
+    TS_ASSERT_EQUALS(i32.isInt(), true);
 
-    auto i64 = doc.getElByName("64");
-    TS_ASSERT(i64);
-    TS_ASSERT_EQUALS(i64->getNumber(), 64);
-    TS_ASSERT_EQUALS(i32->isNumber(), true);
-    TS_ASSERT_EQUALS(i32->isInt(), true);
+    bsond::DocumentElement i64;
+    TS_ASSERT(doc.getElByName("64", i64));
+    TS_ASSERT_EQUALS(i64.getNumber(), 64);
+    TS_ASSERT_EQUALS(i32.isNumber(), true);
+    TS_ASSERT_EQUALS(i32.isInt(), true);
   }
 
   void testGetInt() {
@@ -67,12 +67,12 @@ public:
     };
     bsond::Document doc(buf, sizeof(buf));
 
-    auto i32 = doc.getElByName("32");
-    TS_ASSERT(i32);
-    TS_ASSERT_EQUALS(i32->getInt(), 32);
+    bsond::DocumentElement i32;
+    TS_ASSERT(doc.getElByName("32", i32));
+    TS_ASSERT_EQUALS(i32.getInt(), 32);
 
-    auto i64 = doc.getElByName("64");
-    TS_ASSERT(i64);
-    TS_ASSERT_EQUALS(i64->getInt(), 64);
+    bsond::DocumentElement i64;
+    TS_ASSERT(doc.getElByName("64", i64));
+    TS_ASSERT_EQUALS(i64.getInt(), 64);
   }
 };

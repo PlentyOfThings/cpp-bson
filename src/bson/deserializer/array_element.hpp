@@ -10,6 +10,8 @@ namespace deserializer {
 
 class ArrayElement : public DocumentElement {
 public:
+  ArrayElement() {}
+
   ArrayElement(const uint8_t buf[], const size_t start, const size_t len) :
       DocumentElement(buf, start, len), index_(0) {}
 
@@ -23,7 +25,7 @@ public:
   }
 
 private:
-  const size_t index_;
+  size_t index_;
 };
 
 } // namespace deserializer

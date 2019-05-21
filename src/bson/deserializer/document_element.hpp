@@ -62,6 +62,8 @@ class Array;
 
 class DocumentElement {
 public:
+  DocumentElement() {}
+
   DocumentElement(const uint8_t buf[], const size_t start, const size_t len) :
       buffer_(buf), start_(start), buffer_length_(len) {}
 
@@ -222,8 +224,8 @@ public:
 
 private:
   const uint8_t *buffer_;
-  const size_t start_;
-  const size_t buffer_length_;
+  size_t start_;
+  size_t buffer_length_;
   mutable size_t name_size_ = 0;
 
   int32_t getDataLen() const {

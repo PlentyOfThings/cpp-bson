@@ -55,15 +55,15 @@ Document::iterator Document::end() const {
   return Document::iterator(*this, this->offset_ + this->len() - 1);
 }
 
-std::shared_ptr<DocumentElement>
-Document::getElByName(const char name[]) const {
+bool Document::getElByName(const char name[], DocumentElement &out) const {
   for (auto const &el : *this) {
     if (el.nameEquals(name)) {
-      return std::make_shared<DocumentElement>(el);
+      out = el;
+      return true;
     }
   }
 
-  return nullptr;
+  return false;
 }
 
 } // namespace deserializer

@@ -7,7 +7,6 @@
 #include "./document_element.hpp"
 #include <cstdlib>
 #include <limits>
-#include <memory>
 
 namespace pot {
 namespace bson {
@@ -55,7 +54,7 @@ public:
   // Implemented in document_iter.hpp
   iterator begin() const;
   iterator end() const;
-  std::shared_ptr<DocumentElement> getElByName(const char name[]) const;
+  bool getElByName(const char name[], DocumentElement &out) const;
 
 protected:
   const uint8_t *buffer_;

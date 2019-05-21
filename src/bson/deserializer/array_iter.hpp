@@ -42,24 +42,26 @@ Array::iterator Array::end() const {
                          this->Document::offset_ + this->Document::len() - 1);
 }
 
-std::shared_ptr<ArrayElement> Array::getElByName(const char index[]) const {
+bool Array::getElByName(const char index[], ArrayElement &out) const {
   for (auto const &el : *this) {
     if (el.nameEquals(index)) {
-      return std::make_shared<ArrayElement>(el);
+      out = el;
+      return true;
     }
   }
 
-  return nullptr;
+  return false;
 }
 
-std::shared_ptr<ArrayElement> Array::getElByIndex(const size_t index) const {
+bool Array::getElByIndex(const size_t index, ArrayElement &out) const {
   for (auto const &el : *this) {
     if (el.getIndex() == index) {
-      return std::make_shared<ArrayElement>(el);
+      out = el;
+      return true;
     }
   }
 
-  return nullptr;
+  return false;
 }
 
 bool Array::containsDouble(const double value, const double epsilon) const {

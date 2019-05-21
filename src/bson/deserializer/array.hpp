@@ -6,7 +6,6 @@
 #include "./document_element.hpp"
 #include <cstdlib>
 #include <limits>
-#include <memory>
 
 namespace pot {
 namespace bson {
@@ -31,8 +30,8 @@ public:
   // Implemented in array_iter.hpp
   iterator begin() const;
   iterator end() const;
-  std::shared_ptr<ArrayElement> getElByName(const char index[]) const;
-  std::shared_ptr<ArrayElement> getElByIndex(const size_t index) const;
+  bool getElByName(const char index[], ArrayElement &out) const;
+  bool getElByIndex(const size_t index, ArrayElement &out) const;
   bool containsDouble(const double value, const double epsilon) const;
   bool containsDouble(const double value) const;
   bool containsStr(const char str[]) const;
