@@ -43,6 +43,7 @@ class Document {
   friend class DocumentElement;
 
 public:
+  Document() {}
   Document(const uint8_t buf[], const size_t len) :
       buffer_(buf), offset_(0), buffer_length_(len) {}
 
@@ -58,8 +59,8 @@ public:
 
 protected:
   const uint8_t *buffer_;
-  const size_t offset_;
-  const size_t buffer_length_;
+  size_t offset_;
+  size_t buffer_length_;
 
   Document(const uint8_t buf[], const size_t len, const size_t offset) :
       buffer_(buf), offset_(offset), buffer_length_(len) {}

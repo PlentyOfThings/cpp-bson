@@ -25,6 +25,7 @@ class Array : public Document {
   friend class DocumentElement;
 
 public:
+  Array() {}
   Array(const uint8_t buf[], const size_t len) : Document::Document(buf, len) {}
 
   // Implemented in array_iter.hpp
