@@ -69,6 +69,8 @@ public:
             TS_ASSERT_EQUALS(el.getName(name, sizeof(name)), 6);
             TS_ASSERT_SAME_DATA(name, "hello", sizeof(name));
             TS_ASSERT(el.nameEquals("hello"));
+            const char *ptr_name = el.getNameRef();
+            TS_ASSERT_EQUALS(strcmp(ptr_name, "hello"), 0);
           }
 
           {
@@ -88,6 +90,9 @@ public:
             TS_ASSERT_EQUALS(el.getStr(value, sizeof(value)), 6);
             TS_ASSERT_SAME_DATA(value, "world", sizeof(value));
             TS_ASSERT(el.strEquals("world"));
+            const char *ptr_value = el.getStrRef();
+            TS_ASSERT_EQUALS(strcmp(ptr_value, "world"), 0);
+            TS_ASSERT_EQUALS(strlen(ptr_value), el.getDataLen() - 1);
           }
 
           {
@@ -343,6 +348,8 @@ public:
             uint8_t buf[5];
             TS_ASSERT_EQUALS(el.getBinary(buf, sizeof(buf)), 5);
             TS_ASSERT_SAME_DATA(buf, expected, sizeof(buf));
+            const uint8_t *ref = el.getBinaryRef();
+            TS_ASSERT_SAME_DATA(ref, expected, el.getDataLen());
           }
 
           {

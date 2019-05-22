@@ -87,6 +87,11 @@ public:
                           __POT_BSON_DOCUMENT_ELEMENT_NAME_OFFSET, len);
   }
 
+  const char *getNameRef() const {
+    return reinterpret_cast<const char *>(
+        &this->buffer_[__POT_BSON_DOCUMENT_ELEMENT_NAME_OFFSET]);
+  }
+
   bool nameEquals(const char str[]) const {
     return is_string_equal(this->buffer_, str,
                            __POT_BSON_DOCUMENT_ELEMENT_NAME_OFFSET);
@@ -113,6 +118,18 @@ public:
                           __POT_BSON_DOCUMENT_ELEMENT_DATA_LEN_OFFSET, len);
   }
 
+  /**
+   * Returns the pointer reference to the contained string.
+   * Use
+   *     DocumentElement::getDataLen()
+   * to get the length of the string.
+   * The pointer is only valid for as long as the buffer data is.
+   */
+  const char *getStrRef() const {
+    return reinterpret_cast<const char *>(
+        &this->buffer_[__POT_BSON_DOCUMENT_ELEMENT_DATA_LEN_OFFSET]);
+  }
+
   bool strEquals(const char str[]) const {
     return is_string_equal(this->buffer_, str,
                            __POT_BSON_DOCUMENT_ELEMENT_DATA_LEN_OFFSET);
@@ -135,6 +152,18 @@ public:
     }
 
     return copy_len;
+  }
+
+  /**
+   * Returns the pointer reference to the contained binary array.
+   * Use
+   *     DocumentElement::getDataLen()
+   * to get the length of the array.
+   * The pointer is only valid for as long as the buffer data is.
+   */
+  const uint8_t *getBinaryRef() const {
+    return &this->buffer_[__POT_BSON_DOCUMENT_ELEMENT_DATA_LEN_OFFSET +
+                          static_cast<uint8_t>(TypeSize::Byte)];
   }
 
   bool getBool() const {
@@ -222,16 +251,25 @@ public:
     }
   }
 
+  /**
+   * Returns the length of the element's value in bytes.
+   * Supports:
+   * - String
+   * - Document
+   * - Array
+   * - Binary
+   * For strings, this includes the null terminator.
+   */
+  int32_t getDataLen() const {
+    return endian::buffer_to_primitive<int32_t, TypeSize::Int32>(
+        this->buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
+  }
+
 private:
   const uint8_t *buffer_;
   size_t start_;
   size_t buffer_length_;
   mutable size_t name_size_ = 0;
-
-  int32_t getDataLen() const {
-    return endian::buffer_to_primitive<int32_t, TypeSize::Int32>(
-        this->buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
-  }
 };
 
 } // namespace deserializer
