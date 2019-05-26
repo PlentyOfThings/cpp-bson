@@ -93,7 +93,7 @@ public:
   Document &appendArr(const char key[], std::function<void(Array &)> builder);
   Document &appendArr(int32_t ikey, std::function<void(Array &)> builder);
 
-  Document &appendBinary(const char key[], const uint8_t buf[], int32_t len) {
+  Document &appendBin(const char key[], const uint8_t buf[], int32_t len) {
     this->writeByte(Element::Binary);
     this->writeStr(key);
 
@@ -104,10 +104,10 @@ public:
     return *this;
   }
 
-  Document &appendBinary(int32_t ikey, const uint8_t buf[], int32_t len) {
+  Document &appendBin(int32_t ikey, const uint8_t buf[], int32_t len) {
     char skey[kIntKeySize];
     convert_int_key_to_str(ikey, skey);
-    return this->appendBinary(skey, buf, len);
+    return this->appendBin(skey, buf, len);
   }
 
   Document &appendBool(const char key[], bool value) {

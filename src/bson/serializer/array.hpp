@@ -45,8 +45,8 @@ public:
     return *this;
   }
 
-  Array &appendBinary(const uint8_t buf[], size_t len) {
-    this->Document::appendBinary(this->index_++, buf, len);
+  Array &appendBin(const uint8_t buf[], size_t len) {
+    this->Document::appendBin(this->index_++, buf, len);
 
     return *this;
   }

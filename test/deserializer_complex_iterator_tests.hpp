@@ -95,8 +95,7 @@ public:
 
           uint8_t expected[] = { 4, 3, 2, 1 };
           uint8_t buf[sizeof(expected)];
-          TS_ASSERT_EQUALS(el.getBinary(buf, sizeof(expected)),
-                           sizeof(expected));
+          TS_ASSERT_EQUALS(el.getBin(buf, sizeof(expected)), sizeof(expected));
           TS_ASSERT_SAME_DATA(buf, expected, sizeof(expected));
           break;
         }
@@ -238,7 +237,7 @@ public:
 
                 uint8_t expected[] = { 4, 3, 2, 1 };
                 uint8_t nbuf[sizeof(expected)];
-                TS_ASSERT_EQUALS(nel.getBinary(nbuf, sizeof(expected)),
+                TS_ASSERT_EQUALS(nel.getBin(nbuf, sizeof(expected)),
                                  sizeof(expected));
                 TS_ASSERT_SAME_DATA(nbuf, expected, sizeof(expected));
                 break;

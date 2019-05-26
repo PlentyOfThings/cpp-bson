@@ -146,7 +146,7 @@ public:
   // Implemented in array.hpp
   Array getArr() const;
 
-  int getBinary(uint8_t buf[], const size_t len) const {
+  int getBin(uint8_t buf[], const size_t len) const {
     int32_t bin_len = getDataLen();
     size_t offset = __POT_BSON_DOCUMENT_ELEMENT_DATA_LEN_OFFSET +
                     static_cast<uint8_t>(TypeSize::Byte);
@@ -166,12 +166,12 @@ public:
    * to get the length of the array.
    * The pointer is only valid for as long as the buffer data is.
    */
-  const uint8_t *getBinaryRef() const {
+  const uint8_t *getBinRef() const {
     return &this->buffer_[__POT_BSON_DOCUMENT_ELEMENT_DATA_LEN_OFFSET +
                           static_cast<uint8_t>(TypeSize::Byte)];
   }
 
-  int64_t getBinaryLen() const {
+  int64_t getBinLen() const {
     return this->getDataLen();
   }
 

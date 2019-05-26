@@ -80,7 +80,7 @@ public:
 
   void testSimpleDocumentBinary() {
     uint8_t bin[] = { 1, 2, 3, 2, 1 };
-    bsons::Result res = rootDoc->appendBinary("a", bin, 5).end();
+    bsons::Result res = rootDoc->appendBin("a", bin, 5).end();
 
     uint8_t expected[kBufSize] = {
       0x12, 0x00, 0x00, 0x00, 0x05, 0x61, 0x00, 0x05, 0x00,
@@ -161,7 +161,7 @@ public:
       }
 
       uint8_t bin[] = { 1, 2, 3 };
-      arr.appendBinary(bin, 3)
+      arr.appendBin(bin, 3)
           .appendBool(true)
           .appendBool(false)
           .appendNull()
@@ -202,7 +202,7 @@ public:
                                .appendStr("a", "nested")
                                .appendStr("doc", "ument");
                          })
-              .appendBinary("buf", bin, 4)
+              .appendBin("buf", bin, 4)
               .appendDoc("bools",
                          [](bsons::Document &ndoc) {
                            ndoc.appendBool("t", true).appendBool("f", false);
@@ -218,7 +218,7 @@ public:
                     .appendStr("element")
                     .appendDoc(
                         [](bsons::Document &ndoc) { ndoc.appendStr("a", "b"); })
-                    .appendBinary(bin, 4)
+                    .appendBin(bin, 4)
                     .appendBool(true)
                     .appendBool(false)
                     .appendNull()

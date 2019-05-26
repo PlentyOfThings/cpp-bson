@@ -92,7 +92,7 @@ public:
             TS_ASSERT(el.strEquals("world"));
             const char *ptr_value = el.getStrRef();
             TS_ASSERT_EQUALS(strcmp(ptr_value, "world"), 0);
-            TS_ASSERT_EQUALS(strlen(ptr_value), el.getDataLen() - 1);
+            TS_ASSERT_EQUALS(strlen(ptr_value), el.getStrLen());
           }
 
           {
@@ -258,7 +258,7 @@ public:
 
                 uint8_t expected[] = { 1, 2, 3 };
                 uint8_t nbuf[sizeof(expected)];
-                TS_ASSERT_EQUALS(nel.getBinary(nbuf, sizeof(expected)),
+                TS_ASSERT_EQUALS(nel.getBin(nbuf, sizeof(expected)),
                                  sizeof(expected));
                 TS_ASSERT_SAME_DATA(nbuf, expected, sizeof(expected));
                 break;
@@ -327,7 +327,7 @@ public:
     TS_ASSERT_EQUALS(iters, 1);
   }
 
-  void testBinary() {
+  void testBin() {
     uint8_t buf[] = {
       0x12, 0x00, 0x00, 0x00, 0x05, 0x61, 0x00, 0x05, 0x00,
       0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x02, 0x01, 0x00,
@@ -346,21 +346,21 @@ public:
 
           {
             uint8_t buf[5];
-            TS_ASSERT_EQUALS(el.getBinary(buf, sizeof(buf)), 5);
+            TS_ASSERT_EQUALS(el.getBin(buf, sizeof(buf)), 5);
             TS_ASSERT_SAME_DATA(buf, expected, sizeof(buf));
-            const uint8_t *ref = el.getBinaryRef();
-            TS_ASSERT_SAME_DATA(ref, expected, el.getDataLen());
+            const uint8_t *ref = el.getBinRef();
+            TS_ASSERT_SAME_DATA(ref, expected, el.getBinLen());
           }
 
           {
             uint8_t buf[3];
-            TS_ASSERT_EQUALS(el.getBinary(buf, sizeof(buf)), 3);
+            TS_ASSERT_EQUALS(el.getBin(buf, sizeof(buf)), 3);
             TS_ASSERT_SAME_DATA(buf, expected, sizeof(buf));
           }
 
           {
             uint8_t buf[7];
-            TS_ASSERT_EQUALS(el.getBinary(buf, sizeof(buf)), 5);
+            TS_ASSERT_EQUALS(el.getBin(buf, sizeof(buf)), 5);
             TS_ASSERT_SAME_DATA(buf, expected, 5);
           }
           break;
