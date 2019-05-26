@@ -121,7 +121,7 @@ public:
   /**
    * Returns the pointer reference to the contained string.
    * Use
-   *     DocumentElement::getDataLen()
+   *     DocumentElement::getStrLen()
    * to get the length of the string.
    * The pointer is only valid for as long as the buffer data is.
    */
@@ -133,6 +133,11 @@ public:
   bool strEquals(const char str[]) const {
     return is_string_equal(this->buffer_, str,
                            __POT_BSON_DOCUMENT_ELEMENT_DATA_LEN_OFFSET);
+  }
+
+  int64_t getStrLen() const {
+    // Exclude the null-terminator
+    return this->getDataLen() - 1;
   }
 
   // Implemented in document.hpp
@@ -157,13 +162,17 @@ public:
   /**
    * Returns the pointer reference to the contained binary array.
    * Use
-   *     DocumentElement::getDataLen()
+   *     DocumentElement::getBinaryLen()
    * to get the length of the array.
    * The pointer is only valid for as long as the buffer data is.
    */
   const uint8_t *getBinaryRef() const {
     return &this->buffer_[__POT_BSON_DOCUMENT_ELEMENT_DATA_LEN_OFFSET +
                           static_cast<uint8_t>(TypeSize::Byte)];
+  }
+
+  int64_t getBinaryLen() const {
+    return this->getDataLen();
   }
 
   bool getBool() const {
@@ -251,6 +260,12 @@ public:
     }
   }
 
+private:
+  const uint8_t *buffer_;
+  size_t start_;
+  size_t buffer_length_;
+  mutable size_t name_size_ = 0;
+
   /**
    * Returns the length of the element's value in bytes.
    * Supports:
@@ -264,12 +279,6 @@ public:
     return endian::buffer_to_primitive<int32_t, TypeSize::Int32>(
         this->buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
   }
-
-private:
-  const uint8_t *buffer_;
-  size_t start_;
-  size_t buffer_length_;
-  mutable size_t name_size_ = 0;
 };
 
 } // namespace deserializer
