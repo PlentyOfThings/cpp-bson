@@ -234,9 +234,27 @@ protected:
   }
 };
 
+namespace data_type {
+
+struct Doc {
+  Document doc;
+  int64_t len;
+};
+
+} // namespace data_type
+
 Document DocumentElement::getDoc() const {
   return { this->buffer_, this->buffer_length_,
            __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET };
+}
+
+bool DocumentElement::tryGetDoc(data_type::Doc &out) const {
+  if (this->type() != Element::Document) {
+    return false;
+  }
+
+  out = { .doc = this->getDoc(), .len = this->getDocLen() };
+  return true;
 }
 
 } // namespace deserializer

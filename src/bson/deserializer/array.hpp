@@ -49,9 +49,27 @@ protected:
       Document::Document(buf, len, offset) {}
 };
 
+namespace data_type {
+
+struct Arr {
+  Array arr;
+  int64_t len;
+};
+
+} // namespace data_type
+
 Array DocumentElement::getArr() const {
   return { this->buffer_, this->buffer_length_,
            __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET };
+}
+
+bool DocumentElement::tryGetArr(data_type::Arr &out) const {
+  if (this->type() != Element::Array) {
+    return false;
+  }
+
+  out = { .arr = this->getArr(), .len = this->getArrLen() };
+  return true;
 }
 
 } // namespace deserializer

@@ -50,6 +50,24 @@ bool is_string_equal(const uint8_t buf[], const char cmp[],
 class Document;
 class Array;
 
+namespace data_type {
+
+struct Str {
+  const char *str;
+  int64_t len;
+};
+
+struct Doc;
+
+struct Arr;
+
+struct Bin {
+  const uint8_t *bin;
+  int64_t len;
+};
+
+} // namespace data_type
+
 #define __POT_BSON_DOCUMENT_ELEMENT_NAME_OFFSET \
   this->start_ + static_cast<uint8_t>(TypeSize::Byte)
 
@@ -102,6 +120,15 @@ public:
         this->buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
   }
 
+  bool tryGetDouble(double &out) const {
+    if (this->type() != Element::Double) {
+      return false;
+    }
+
+    out = this->getDouble();
+    return true;
+  }
+
   double getNumber() const {
     auto type = this->type();
     if (type == Element::Int32) {
@@ -111,6 +138,15 @@ public:
     } else {
       return getDouble();
     }
+  }
+
+  bool tryGetNumber(double &out) const {
+    if (!this->isNumber()) {
+      return false;
+    }
+
+    out = this->getNumber();
+    return true;
   }
 
   int getStr(char str[], const size_t len) const {
@@ -140,11 +176,30 @@ public:
     return this->getDataLen() - 1;
   }
 
+  bool tryGetStr(data_type::Str &out) const {
+    if (this->type() != Element::String) {
+      return false;
+    }
+
+    out = { .str = this->getStrRef(), .len = this->getStrLen() };
+    return true;
+  }
+
   // Implemented in document.hpp
   Document getDoc() const;
+  bool tryGetDoc(data_type::Doc &out) const;
+
+  int64_t getDocLen() const {
+    return this->getDataLen();
+  }
 
   // Implemented in array.hpp
   Array getArr() const;
+  bool tryGetArr(data_type::Arr &out) const;
+
+  int64_t getArrLen() const {
+    return this->getDataLen();
+  }
 
   int getBin(uint8_t buf[], const size_t len) const {
     int32_t bin_len = getDataLen();
@@ -175,10 +230,28 @@ public:
     return this->getDataLen();
   }
 
+  bool tryGetBin(data_type::Bin &out) const {
+    if (this->type() != Element::Binary) {
+      return false;
+    }
+
+    out = { .bin = this->getBinRef(), .len = this->getBinLen() };
+    return true;
+  }
+
   bool getBool() const {
     uint8_t val = this->buffer_[__POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET];
 
     return val == static_cast<uint8_t>(BooleanElementValue::True);
+  }
+
+  bool tryGetBool(bool &out) const {
+    if (this->type() != Element::Boolean) {
+      return false;
+    }
+
+    out = this->getBool();
+    return true;
   }
 
   int32_t getInt32() const {
@@ -186,9 +259,27 @@ public:
         this->buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
   }
 
+  bool tryGetInt32(int32_t &out) const {
+    if (this->type() != Element::Int32) {
+      return false;
+    }
+
+    out = this->getInt32();
+    return true;
+  }
+
   int64_t getInt64() const {
     return endian::buffer_to_primitive<int64_t, TypeSize::Int64>(
         this->buffer_, __POT_BSON_DOCUMENT_ELEMENT_DATA_OFFSET);
+  }
+
+  bool tryGetInt64(int64_t &out) const {
+    if (this->type() != Element::Int64) {
+      return false;
+    }
+
+    out = this->getInt64();
+    return true;
   }
 
   int64_t getInt() const {
@@ -197,6 +288,15 @@ public:
     } else {
       return getInt64();
     }
+  }
+
+  bool tryGetInt(int64_t &out) const {
+    if (!this->isInt()) {
+      return false;
+    }
+
+    out = this->getInt();
+    return true;
   }
 
   size_t nameSize() const {

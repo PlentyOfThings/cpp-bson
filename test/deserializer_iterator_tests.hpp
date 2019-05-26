@@ -33,6 +33,14 @@ public:
           TS_ASSERT_EQUALS(el.type(), pot::bson::Element::Double);
           TS_ASSERT(el.nameEquals("a"));
           TS_ASSERT_EQUALS(el.getDouble(), 0.2);
+
+          double out;
+          TS_ASSERT(el.tryGetDouble(out));
+          TS_ASSERT_EQUALS(out, 0.2);
+
+          double out_num;
+          TS_ASSERT(el.tryGetNumber(out_num));
+          TS_ASSERT_EQUALS(out_num, 0.2);
           break;
         }
         default: {
@@ -93,6 +101,11 @@ public:
             const char *ptr_value = el.getStrRef();
             TS_ASSERT_EQUALS(strcmp(ptr_value, "world"), 0);
             TS_ASSERT_EQUALS(strlen(ptr_value), el.getStrLen());
+
+            bsond::data_type::Str out;
+            TS_ASSERT(el.tryGetStr(out));
+            TS_ASSERT_EQUALS(strcmp(out.str, "world"), 0);
+            TS_ASSERT_EQUALS(out.len, sizeof(value) - 1);
           }
 
           {
@@ -350,6 +363,11 @@ public:
             TS_ASSERT_SAME_DATA(buf, expected, sizeof(buf));
             const uint8_t *ref = el.getBinRef();
             TS_ASSERT_SAME_DATA(ref, expected, el.getBinLen());
+
+            bsond::data_type::Bin out;
+            TS_ASSERT(el.tryGetBin(out));
+            TS_ASSERT_SAME_DATA(out.bin, expected, sizeof(buf));
+            TS_ASSERT_EQUALS(out.len, sizeof(expected));
           }
 
           {
@@ -395,12 +413,20 @@ public:
           TS_ASSERT_EQUALS(el.type(), pot::bson::Element::Boolean);
           TS_ASSERT(el.nameEquals("true"));
           TS_ASSERT_EQUALS(el.getBool(), true);
+
+          bool out;
+          TS_ASSERT(el.tryGetBool(out));
+          TS_ASSERT_EQUALS(out, true);
           break;
         }
         case 1: {
           TS_ASSERT_EQUALS(el.type(), pot::bson::Element::Boolean);
           TS_ASSERT(el.nameEquals("false"));
           TS_ASSERT_EQUALS(el.getBool(), false);
+
+          bool out;
+          TS_ASSERT(el.tryGetBool(out));
+          TS_ASSERT_EQUALS(out, false);
           break;
         }
         default: {
@@ -463,6 +489,14 @@ public:
           TS_ASSERT_EQUALS(el.type(), pot::bson::Element::Int32);
           TS_ASSERT(el.nameEquals("val"));
           TS_ASSERT_EQUALS(el.getInt32(), 9812);
+
+          int32_t out;
+          TS_ASSERT(el.tryGetInt32(out));
+          TS_ASSERT_EQUALS(out, 9812);
+
+          int64_t out_int;
+          TS_ASSERT(el.tryGetInt(out_int));
+          TS_ASSERT_EQUALS(out_int, 9812);
           break;
         }
         default: {
@@ -495,6 +529,14 @@ public:
           TS_ASSERT_EQUALS(el.type(), pot::bson::Element::Int64);
           TS_ASSERT(el.nameEquals("val"));
           TS_ASSERT_EQUALS(el.getInt64(), 98761234);
+
+          int64_t out;
+          TS_ASSERT(el.tryGetInt64(out));
+          TS_ASSERT_EQUALS(out, 98761234);
+
+          int64_t out_int;
+          TS_ASSERT(el.tryGetInt(out_int));
+          TS_ASSERT_EQUALS(out_int, 98761234);
           break;
         }
         default: {
