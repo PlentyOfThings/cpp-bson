@@ -202,7 +202,7 @@ public:
   }
 
   int getBin(uint8_t buf[], const size_t len) const {
-    int32_t bin_len = getDataLen();
+    size_t bin_len = getDataLen();
     size_t offset = __POT_BSON_DOCUMENT_ELEMENT_DATA_LEN_OFFSET +
                     static_cast<uint8_t>(TypeSize::Byte);
     size_t copy_len = bin_len < len ? bin_len : len;
@@ -358,6 +358,8 @@ public:
         return 0;
       }
     }
+
+    return 0;
   }
 
 private:
